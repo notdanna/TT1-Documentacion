@@ -1,0 +1,177 @@
+\newpage
+\subsubsection{Justificación del proveedor de nube: AWS sobre Azure y GCP}
+\label{subsec:justificacion_aws}
+
+La selección de Amazon Web Services (AWS) como proveedor de
+infraestructura en la nube para este sistema no es arbitraria. Se
+fundamenta en un análisis comparativo de los tres principales
+proveedores del mercado: AWS, Microsoft Azure y Google Cloud Platform
+(GCP), evaluando sus servicios equivalentes, modelos de precios,
+madurez del ecosistema y adecuación al contexto del proyecto.
+
+\textbf{Posición en el mercado.} AWS es el proveedor de nube líder
+a nivel mundial con una cuota de mercado del 31\% en 2025, seguido
+por Azure con 25\% y GCP con 11\%, según datos de Synergy Research
+Group \cite{aws_vs_azure_gcp_2025}. Esta posición de liderazgo se
+traduce en un ecosistema más maduro, mayor disponibilidad de
+documentación, comunidad de soporte más amplia y mayor cantidad de
+integraciones con herramientas de terceros como Micronaut, Angular
+y GitHub Actions.
+
+\textbf{Comparativa de servicios equivalentes.} La
+Tabla~\ref{tab:comparativa_nubes} presenta los servicios equivalentes
+de cada proveedor para los componentes utilizados en el sistema.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}m{3cm}|>
+{\raggedright\arraybackslash}m{3.5cm}|>{\raggedright\arraybackslash}m{3.5cm}|>
+{\raggedright\arraybackslash}m{3.5cm}|}
+\caption{Comparativa de servicios equivalentes entre AWS, Azure y GCP (2025).}
+\label{tab:comparativa_nubes} \\
+\hline
+\textbf{Componente} & \textbf{AWS} & \textbf{Microsoft Azure} & \textbf{Google Cloud (GCP)} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{Componente} & \textbf{AWS} & \textbf{Microsoft Azure} & \textbf{Google Cloud (GCP)} \\
+\hline
+\endhead
+
+Funciones serverless & AWS Lambda & Azure Functions & Cloud Functions \\
+\hline
+API Gateway & Amazon API Gateway & Azure API Management & Cloud API Gateway / Apigee \\
+\hline
+Base de datos relacional & Amazon RDS & Azure SQL Database & Cloud SQL \\
+\hline
+Almacenamiento de objetos & Amazon S3 & Azure Blob Storage & Cloud Storage \\
+\hline
+CDN & Amazon CloudFront & Azure CDN & Cloud CDN \\
+\hline
+Autenticación & Amazon Cognito & Azure Active Directory B2C & Firebase Authentication \\
+\hline
+ML / Versionado de modelos & Amazon SageMaker & Azure Machine Learning & Vertex AI \\
+\hline
+CI/CD & GitHub Actions + AWS CodeDeploy & Azure DevOps & Cloud Build \\
+\hline
+Certificados SSL/TLS & AWS Certificate Manager & App Service Managed Certificates & Google-managed SSL \\
+\hline
+Monitoreo & Amazon CloudWatch & Azure Monitor & Cloud Monitoring \\
+\hline
+WAF & AWS WAF & Azure Web Application Firewall & Cloud Armor \\
+\hline
+\end{longtable}
+
+\textbf{Comparativa de capa gratuita.} La
+Tabla~\ref{tab:free_tier_comparativa} compara los límites gratuitos
+de los servicios más relevantes para el sistema entre los tres
+proveedores \cite{aws_vs_azure_gcp_2025}.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}m{3cm}|>
+{\raggedright\arraybackslash}m{3.5cm}|>{\raggedright\arraybackslash}m{3.5cm}|>
+{\raggedright\arraybackslash}m{3.5cm}|}
+\caption{Comparativa de capa gratuita entre AWS, Azure y GCP (2025).}
+\label{tab:free_tier_comparativa} \\
+\hline
+\textbf{Servicio} & \textbf{AWS} & \textbf{Azure} & \textbf{GCP} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{Servicio} & \textbf{AWS} & \textbf{Azure} & \textbf{GCP} \\
+\hline
+\endhead
+
+Funciones serverless & \textbf{1M invocaciones/mes siempre gratis} & 1M invocaciones/mes (12 meses) & 2M invocaciones/mes siempre gratis \\
+\hline
+Almacenamiento objetos & \textbf{5 GB siempre gratis} & 5 GB (12 meses) & 5 GB siempre gratis \\
+\hline
+Base de datos relacional & 750 hrs db.t2.micro (12 meses) & 250 GB Azure SQL (12 meses) & 1 instancia db-f1-micro siempre gratis \\
+\hline
+CDN & \textbf{1 TB transferencia siempre gratis} & 15 GB (12 meses) & 10 GB/mes siempre gratis \\
+\hline
+Autenticación & \textbf{50,000 usuarios activos/mes siempre gratis} & 50,000 MAU (siempre gratis) & 10,000 usuarios/mes (Firebase) \\
+\hline
+API Gateway & \textbf{1M llamadas REST/mes siempre gratis} & No tiene capa gratuita específica & 2M llamadas/mes (Cloud Endpoints) \\
+\hline
+Certificado SSL & \textbf{Gratis e ilimitado con servicios AWS} & Gratis solo en App Service & Gratis con servicios GCP \\
+\hline
+\end{longtable}
+
+\textbf{Modelo de precios pay-as-you-go.} AWS fue pionero en el
+modelo de pago por uso en la nube pública, y sigue siendo el más
+granular de los tres proveedores. Lambda factura por milisegundo de
+ejecución, S3 por GB almacenado y por número de solicitudes, y
+CloudFront por GB transferido, lo que garantiza que el sistema pague
+exactamente por lo que consume sin desperdiciar recursos. Esto
+contrasta con modelos de otros proveedores donde algunos servicios
+tienen cargos mínimos independientemente del uso \cite{northflank_comparison}.
+
+\textbf{Razones concretas para elegir AWS sobre Azure y GCP.}
+
+\begin{itemize}
+    \item \textbf{Madurez del ecosistema serverless:} AWS Lambda fue
+    el primer servicio de funciones serverless del mercado, lanzado
+    en 2014, con dos años de ventaja sobre Azure Functions (2016) y
+    Google Cloud Functions (2016). Esta madurez se traduce en mejor
+    documentación, más ejemplos de integración con Micronaut y mayor
+    estabilidad del servicio \cite{cloudplexo_serverless}.
+
+    \item \textbf{Integración nativa con GitHub Actions:} El pipeline
+    CI/CD del proyecto utiliza GitHub Actions, que tiene integración
+    oficial y más desarrollada con AWS que con GCP. Azure DevOps es
+    el competidor directo pero implica adoptar todo el ecosistema
+    Microsoft.
+
+    \item \textbf{Amazon SageMaker vs alternativas:} Para el
+    versionado del modelo de clasificación, SageMaker Model Registry
+    ofrece una integración más directa con S3 y Lambda que Vertex AI
+    (GCP) o Azure Machine Learning, simplificando el flujo de
+    publicación del modelo \texttt{.tflite}.
+
+    \item \textbf{CloudFront vs Azure CDN vs Cloud CDN:} Amazon
+    CloudFront ofrece 1 TB de transferencia gratuita de forma
+    permanente, mientras que Azure CDN solo cubre 15 GB durante los
+    primeros 12 meses y Cloud CDN ofrece 10 GB/mes. Para el frontend
+    Angular del sistema, CloudFront representa la opción más económica
+    a largo plazo \cite{aws_vs_azure_gcp_2025}.
+
+    \item \textbf{Amazon Cognito vs alternativas:} Cognito ofrece
+    50,000 usuarios activos mensuales de forma gratuita e indefinida,
+    comparable a Azure AD B2C pero con una integración más directa
+    con API Gateway y Lambda sin configuración adicional.
+
+    \item \textbf{Reservaciones de RDS:} AWS ofrece Reserved Instances
+    para RDS con hasta un 72\% de descuento sobre el precio bajo
+    demanda, permitiendo planificar costos a largo plazo con certeza.
+    GCP ofrece descuentos similares mediante Committed Use Discounts,
+    pero la flexibilidad de instancia de AWS es mayor \cite{northflank_comparison}.
+
+    \item \textbf{Comunidad y soporte académico:} AWS cuenta con el
+    programa \textit{AWS Educate} y \textit{AWS Academy}, que
+    proporcionan créditos y recursos educativos para proyectos
+    académicos, alineado con el contexto de titulación de este
+    prototipo.
+
+    \item \textbf{Azure no es la opción óptima para este stack:}
+    Azure es la mejor opción cuando se trabaja dentro del ecosistema
+    Microsoft (Windows Server, SQL Server, .NET, Azure DevOps). El
+    stack del presente sistema, basado en Java 2 1/Micronaut, Angular,
+    PostgreSQL y GitHub Actions, no se beneficia de las ventajas
+    específicas de Azure, lo que haría su adopción innecesariamente
+    compleja sin ventaja económica o técnica.
+
+    \item \textbf{GCP no es la opción óptima para este stack:} GCP
+    destaca en cargas de trabajo de análisis de datos masivos con
+    BigQuery, orquestación de contenedores con GKE y modelos de ML
+    con Vertex AI. Para un sistema de sincronización móvil con backend
+    REST y base de datos relacional, estas ventajas no son relevantes
+    y su ecosistema serverless es menos maduro que el de AWS para
+    integraciones con Micronaut y PostgreSQL.
+\end{itemize}
+
+En conclusión, AWS representa la opción más adecuada para este proyecto
+por su madurez en el ecosistema serverless, la amplitud de su capa
+gratuita, el modelo pay-as-you-go granular, la integración nativa con
+las herramientas del stack seleccionado y su trayectoria como líder
+del mercado de nube pública con más de 18 años de operación continua
+\cite{aws_vs_azure_gcp_2025}.

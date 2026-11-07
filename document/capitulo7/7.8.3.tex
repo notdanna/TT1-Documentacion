@@ -1,0 +1,59 @@
+\newpage
+\subsubsection{Herramientas para la aplicación móvil}
+
+La aplicación móvil se desarrollará de forma nativa para el sistema
+operativo Android, utilizando un conjunto de herramientas modernas
+que garantizan rendimiento, mantenibilidad y compatibilidad con el
+enfoque offline-first del sistema.
+
+\textbf{Kotlin} es el lenguaje de programación oficial para el
+desarrollo de aplicaciones Android, respaldado por Google desde 2017.
+Su sintaxis concisa, su interoperabilidad con Java 21 y su soporte nativo
+para corrutinas lo convierten en la opción más adecuada para el
+desarrollo de aplicaciones móviles modernas que requieren manejo
+eficiente de operaciones asíncronas como la sincronización de datos
+y la inferencia del modelo.
+
+\textbf{Jetpack Compose} es el framework moderno de Google para la
+construcción de interfaces de usuario en Android. A diferencia del
+enfoque tradicional basado en XML, Jetpack Compose permite definir
+la interfaz de forma declarativa en Kotlin, reduciendo la cantidad
+de código necesario y facilitando la creación de interfaces reactivas
+que respondan al estado de la aplicación en tiempo real.
+
+\textbf{TensorFlow Lite} se integrará directamente en la aplicación
+para ejecutar el modelo de clasificación EfficientNet-B3 de forma
+local en el dispositivo. El modelo en formato \texttt{.tflite} se
+almacenará en el dispositivo y se actualizará ocasionalmente desde
+Amazon S3 cuando exista una nueva versión disponible.
+
+\textbf{Room} es la biblioteca de persistencia oficial de Android,
+construida sobre SQLite. Se utilizará para gestionar la base de datos
+local del dispositivo, almacenando los registros de árboles, capturas,
+resultados de clasificación y estados de sincronización de forma
+estructurada y eficiente mientras el dispositivo opera sin conexión
+a internet.
+
+\textbf{MapLibre GL Android} es la biblioteca de código abierto utilizada
+para la visualización de mapas vectoriales dentro de la aplicación.
+Permite renderizar mapas de forma completamente offline a partir de
+un archivo \texttt{.pmtiles} descargado localmente en el dispositivo,
+el cual contiene los datos cartográficos de la zona de operación.
+Sobre este mapa se renderizan pines de ubicación generados a partir
+de las coordenadas GPS extraídas de los metadatos EXIF de cada imagen
+capturada, sin requerir conexión a internet en ningún momento durante
+su uso.
+
+\textbf{Retrofit y OkHttp} conforman el cliente HTTP que gestionará
+la comunicación entre la aplicación móvil y la API REST en la nube
+durante la sincronización de datos. Retrofit facilita la definición
+de endpoints REST de forma declarativa, mientras que OkHttp actúa
+como cliente HTTP subyacente, gestionando las conexiones, los tiempos
+de espera y los reintentos automáticos.
+
+La autenticación del experto de campo se gestionará mediante
+\textbf{JWT propio}, generado por el backend al momento del inicio
+de sesión y almacenado localmente en el dispositivo. Este token se
+incluirá en cada petición de sincronización, permitiendo que la
+aplicación opere de forma segura sin depender de una conexión
+permanente a internet.

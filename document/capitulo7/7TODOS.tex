@@ -1,0 +1,535 @@
+\newpage
+\section*{Capitulo 7. Análisis del sistema}
+\addcontentsline{toc}{section}{Capitulo 7. Análisis del sistema}
+\setcounter{section}{7}
+\setcounter{subsection}{0}
+
+\subsection{Requerimientos del sistema}
+El presente proyecto tiene como producto principal el desarrollo de un sistema móvil para la detección de insectos descortezadores mediante visión por computadora. Sin embargo, durante el análisis del problema se identificó que una aplicación móvil por sí sola no es suficiente para cubrir todas las necesidades del proceso de monitoreo forestal: mientras que el experto de campo requiere una herramienta ágil, funcional sin conexión a internet y orientada a la captura y análisis inmediato en sitio, los gestores y analistas del bosque necesitan acceder al historial completo de registros, consultar estadísticas, revisar los resultados oficiales del modelo en la nube y generar reportes de seguimiento.
+Por esta razón, el sistema se compone de dos subsistemas complementarios: una aplicación móvil Android diseñada bajo un enfoque offline-first, que constituye el núcleo del prototipo, y una plataforma web que actúa como herramienta de monitoreo y gestión para el personal de administración del bosque. Ambos subsistemas comparten la misma base de datos en la nube y están diseñados para operar de forma coordinada.
+
+\subsubsection{Requerimientos funcionales}
+Los requisitos funcionales definen las capacidades y comportamientos específicos que el sistema debe satisfacer, diferenciados por componente: la aplicación móvil, orientada al monitoreo en campo, y el panel web, destinado a la gestión y consulta de resultados. 
+
+Con el propósito de reflejar claramente a qué subsistema aplica cada requerimiento, se ha adoptado un esquema de etiquetado de requisitos funcionales con el ámbito de aplicación correspondiente: aplicación móvil (\textbf{MOV}), aplicación web (\textbf{WEB}) o ambos entornos (\textbf{MOV/WEB}).
+
+La Tabla 3 resume estos requisitos.
+
+\begin{longtable}{|>
+{\centering\arraybackslash}m{1.8cm}|>{\centering\arraybackslash}m{2.2cm}|m{10cm}|}
+\caption{Requerimientos funcionales de la aplicación móvil y la plataforma web}\label{tab:rf} \\
+\hline
+\textbf{ID} & \textbf{Ámbito} & \textbf{Descripción} \\
+\hline
+\endfirsthead
+\multicolumn{3}{c}%
+{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{ID} & \textbf{Ámbito} & \textbf{Descripción} \\
+\hline
+\endhead
+
+RF-01 & MOV/WEB & El sistema debe permitir al usuario registrarse e iniciar sesión utilizando un correo electrónico y una contraseña. \\
+\hline
+RF-02 & MOV/WEB & El sistema debe permitir al usuario solicitar la recuperación de su contraseña a través de un enlace enviado a su correo electrónico. \\
+\hline
+RF-03 & MOV & El sistema debe permitir la entrada de imágenes de dos formas: capturándolas directamente desde la aplicación o subiéndolas desde la galería del dispositivo. \\
+\hline
+RF-04 & MOV & El sistema debe contar con herramientas de edición básicas antes de enviar la imagen a procesar. \\
+\hline
+RF-05 & MOV & El sistema debe registrar automáticamente la ubicación geográfica del árbol fotografiado, obtenida a partir de los metadatos de la fotografía o del GPS del dispositivo en el momento de la captura. \\
+\hline
+RF-06 & MOV & El sistema debe almacenar localmente un registro de todas las imágenes ingresadas por el usuario, incluyendo su resultado de clasificación, \textit{timestamp} y ubicación, para su posterior sincronización con la nube. \\
+\hline
+RF-07 & MOV & El sistema debe sincronizar los registros almacenados localmente hacia la nube cuando el usuario cuente con conexión a internet, conservando la fecha y hora original de captura como referencia del registro. \\
+\hline
+RF-08 & MOV/WEB & La aplicación móvil deberá incorporar un modelo en formato TensorFlow Lite embebido en el dispositivo para realizar una clasificación local e inmediata de la imagen capturada cuando no se tenga acceso a internet.
+La aplicación web deberá incorporar un modelo en formato Keras3 para realizar una clasificación en la nube de la imagen capturada en la aplicación movil.  
+\\
+\hline
+RF-09 & MOV & El sistema debe emitir y mostrar en pantalla una clasificación inmediata del estado sanitario del árbol, indicando si está sano o infectado, generada por el modelo local embebido en el dispositivo, sin requerir conexión a internet. \\
+\hline
+RF-10 & WEB & El sistema debe permitir agrupar y dar seguimiento a un conjunto de muestras específicas a lo largo del tiempo, generando un historial del estado de salud de cada ejemplar. \\
+\hline
+RF-11 & MOV/WEB & El sistema debe mostrar alertas o indicadores visuales con el analisis complementario de color que faciliten la detección de focos de infestación. \\
+\hline
+RF-12 & MOV & El sistema debe mostrar un resumen estadístico de la jornada actual, incluyendo el número total de fotografías tomadas en el día, la cantidad de árboles clasificados como sanos y la cantidad de posibles infecciones detectadas. \\
+\hline
+RF-13 & MOV & El sistema debe proveer acceso directo y visible a la función principal: ``Nueva Captura''. \\
+\hline
+
+
+
+
+
+
+RF-14 & MOV & El sistema debe mostrar notificaciones o alertas cuando el usuario se encuentre en las proximidades de una zona previamente catalogada como foco de infestación. \\
+\hline
+
+
+
+
+
+
+
+RF-15 & MOV & La sincronización manual estará disponible únicamente cuando existan errores de sincronización y el dispositivo cuente con conexión activa. En caso contrario, el sistema deberá deshabilitar esta opción e informar al usuario la causa. \\
+\hline
+RF-16 & WEB & El sistema debe permitir generar un reporte básico en formato PDF de las capturas realizadas. \\
+\hline
+RF-17 & WEB & El sistema debe permitir descargar el reporte generado. \\
+\hline
+RF-18 & MOV & El sistema debe conservar en el almacenamiento local del dispositivo los registros asociados a las imágenes capturadas, excepto estas últimas. \\
+\hline
+RF-19 & MOV & El sistema debe permitir al usuario asociar una nueva captura a un árbol ya existente en el registro local, o bien crear un nuevo registro de árbol al momento de realizar una captura. \\
+\hline
+RF-20 & WEB & El sistema debe mostrar el historial completo y permanente de todos los árboles registrados, incluyendo sus capturas, resultados de clasificación, observaciones y fechas de subida y sincronización, sin restricción de periodo de tiempo. \\
+\hline
+
+
+
+
+
+
+RF-21 & WEB & El sistema debe mostrar estadísticas generales del estado del arbolado registrado, incluyendo totales por estado sanitario, distribución por especie y evolución temporal de los focos de infestación detectados. \\
+\hline
+
+
+RF-22 & MOV/WEB & El sistema movil debe ejecutar un análisis complementario de color sobre la imagen capturada y mostrar su resultado como información complementaria al resultado de clasificación, tanto en la app móvil como en la app web. \\
+\hline
+RF-23 & MOV & El sistema debe permitir al usuario operativo editar la información de un registro de árbol, incluyendo la actualización de su estado sanitario y la adición de observaciones o notas de campo. \\
+\hline
+RF-24 & WEB & El sistema debe mostrar un mapa general con la ubicación de todos los árboles registrados, permitiendo filtrarlos por estado sanitario, especie, fecha de captura y dispositivo. \\
+\hline
+
+RF-25 & MOV & El sistema debe mostrar un mapa general con la ubicación de todos los árboles registrados del dispositivo, permitiendo filtrarlos por estado sanitario, especie y fecha de captura. \\
+\hline
+
+RF-26 & WEB & El sistema debe permitir al administrador gestionar las cuentas de usuario del sistema, incluyendo la creación, edición, desactivación y asignación de roles. \\
+\hline
+
+RF-27 & MOV/WEB & El sistema deberá permitir que una cuenta de experto de campo pueda estar asociada a uno o varios dispositivos móviles. Cada dispositivo deberá mantener una base de datos local independiente en SQLite para almacenar árboles, capturas, análisis y ubicaciones registrados offline. Al recuperar conexión, la aplicación móvil deberá sincronizar los registros locales con la base de datos central en la nube, conservando la identificación del dispositivo de origen. \\
+\hline
+
+RF-28 & MOV & Cuando dos dispositivos asociados a la misma cuenta registren árboles con el mismo nombre, el sistema no deberá asumir que se trata del mismo árbol físico. \\
+\hline
+
+\end{longtable}
+
+
+\subsubsection{Requerimientos no funcionales}
+Los requisitos no funcionales establecen las restricciones de calidad, rendimiento y operación bajo las cuales el sistema debe funcionar, independientemente de las funcionalidades que provee. La Tabla 4 los detalla.
+
+\begin{longtable}{|>{\centering\arraybackslash}m{1.8cm}|>{\centering\arraybackslash}m{2.5cm}|m{9.5cm}|}
+\caption{Requerimientos no funcionales de la aplicación móvil y la plataforma web}\label{tab:rnf} \\
+\hline
+\textbf{ID} & \textbf{Categoría} & \textbf{Descripción} \\
+\hline
+\endfirsthead
+
+\multicolumn{3}{c}%
+{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{ID} & \textbf{Categoría} & \textbf{Descripción} \\
+\hline
+\endhead
+
+RNF-01 & Rendimiento & El sistema debe devolver el resultado del análisis (sano/infectado) en un tiempo máximo de X segundos una vez que la imagen ha sido cargada exitosamente en la nube. \\
+\hline
+RNF-02 & Portabilidad & El tamaño de la aplicación móvil instalada no debe exceder los 50 MB, asegurando que pueda ser instalada en dispositivos de gama media sin saturar el almacenamiento. \\
+\hline
+RNF-03 & Usabilidad & Las transiciones entre las pantallas de la aplicación, como pasar del mapa al historial del árbol, no deben demorar más de X segundos. \\
+\hline
+RNF-04 & Eficiencia & La aplicación debe estar optimizada para no realizar procesos en segundo plano innecesarios, minimizando el consumo de batería del dispositivo durante las jornadas de inspección en el bosque. \\
+\hline
+RNF-05 & Seguridad & Toda comunicación entre la aplicación móvil y los servicios en la nube, incluyendo el envío de credenciales, imágenes y coordenadas, debe realizarse a través de protocolos seguros como HTTPS. \\
+\hline
+RNF-06 & Seguridad & Las contraseñas de los usuarios deben almacenarse en la base de datos utilizando algoritmos de hashing para evitar su exposición. \\
+\hline
+RNF-07 & Seguridad & El sistema debe cerrar automáticamente la sesión del usuario tras un periodo prolongado de inactividad, por ejemplo 24 horas, para proteger los datos en caso de extravío del dispositivo. \\
+\hline
+RNF-08 & Precisión & El modelo de visión por computadora debe alcanzar y mantener un porcentaje mínimo de precisión de X\% en la correcta clasificación de los árboles infestados por descortezadores. \\
+\hline
+RNF-09 & Arquitectura & El sistema debe respetar una arquitectura cliente-servidor, delegando el procesamiento pesado del modelo de inteligencia artificial a la nube. \\
+\hline
+RNF-10 & Persistencia & El sistema debe contar con una base de datos relacional o no relacional optimizada para manejar consultas rápidas del historial forestal y referenciar los archivos de imágenes. \\
+\hline
+RNF-11 & Implementación & La aplicación cliente debe ser desarrollada de forma nativa para el sistema operativo Android utilizando el lenguaje de programación \textbf{Kotlin}, garantizando un acceso óptimo al hardware del dispositivo, como cámara, GPS y almacenamiento local. \\
+\hline
+RNF-12 & Implementación & El modelo de visión por computadora para la detección de insectos descortezadores debe ser programado en Python, utilizando \textit{frameworks} especializados en aprendizaje profundo, como TensorFlow o PyTorch. \\
+\hline
+RNF-13 & Rendimiento & Debido a que el análisis de imágenes puede tomar algunos segundos, el backend en Python debe manejar las peticiones de forma asíncrona para no bloquear la interfaz de usuario en la aplicación Kotlin. \\
+\hline
+RNF-14 & Mantenibilidad & El proyecto móvil debe utilizar Gradle para la gestión de librerías, mientras que el entorno de Python debe usar gestores como \textit{pip} o \textit{conda} para asegurar la replicabilidad del entorno de desarrollo. \\
+\hline
+RNF-15 & Persistencia & La aplicación cliente en Android debe implementar \textbf{SQLite}, preferentemente mediante la librería \textit{Room}, para el almacenamiento estructurado y local de la información. Esto permitirá guardar temporalmente los datos de las capturas cuando el usuario se encuentre en zonas sin conexión a internet, garantizando el uso básico \textit{offline}. \\
+\hline
+RNF-16 & Persistencia & El backend del sistema debe utilizar \textbf{PostgreSQL} como motor de base de datos relacional principal. Esta base de datos será la encargada de almacenar de forma centralizada, segura y escalable las credenciales de acceso de los usuarios, así como el historial completo y digitalizado del estado sanitario de cada árbol evaluado. \\
+\hline
+RNF-17 & Integridad & El sistema debe cambiar el estado local de los registros en SQLite a ``Sincronizado'' o eliminarlos localmente una vez que el servidor backend confirme que la información se guardó exitosamente en PostgreSQL, evitando así la duplicidad de datos. \\
+\hline
+\end{longtable}
+
+\subsection{Reglas de negocio del sistema}
+Las reglas de negocio definen los criterios que rigen el comportamiento del sistema en relación con la detección de plagas y el procesamiento de imágenes. Reflejan decisiones metodológicas independientes de la tecnología utilizada y se presentan en la Tabla 5.
+
+\begin{longtable}{|>{\centering\arraybackslash}m{1.8cm}|>{\centering\arraybackslash}m{2.5cm}|m{9.5cm}|}
+\caption{Reglas de negocio de la aplicación móvil y la plataforma web}\label{tab:reglas_operacion} \\
+\hline
+\textbf{ID} & \textbf{Tipo} & \textbf{Descripción} \\
+\hline
+\endfirsthead
+
+\multicolumn{3}{c}%
+{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{ID} & \textbf{Tipo} & \textbf{Descripción} \\
+\hline
+\endhead
+
+RN-01 & Acceso & Solo los usuarios con rol \textbf{Administrador} podrán crear cuentas nuevas. El registro no será abierto al público. \\
+\hline
+RN-02 & Acceso & El rol \textbf{Experto de campo} podrá iniciar sesión en la app móvil y web. El rol \textbf{Administrador} solo podrá iniciar sesión en la app web. \\
+\hline
+RN-03 & Sesión & La sesión en la app móvil persistirá activa hasta que el usuario cierre sesión manualmente. No expirará por inactividad. \\
+\hline
+RN-04 & Seguridad & El enlace de recuperación de contraseña tendrá una vigencia máxima de 24 horas a partir de su generación. \\
+\hline
+RN-05 & Seguridad & El enlace de recuperación será de un solo uso; una vez utilizado quedará invalidado automáticamente. \\
+\hline
+RN-06 & Seguridad & El sistema permitirá un máximo de 3 solicitudes de recuperación de contraseña por usuario en un periodo de 30 días naturales. \\
+\hline
+RN-07 & Imagen & Solo se aceptarán imágenes en formato JPG, JPEG, PNG, WEBP, BMP y HEIC. \\
+\hline
+RN-08 & Imagen & El tamaño máximo de imagen aceptado será de 10 MB. \\
+\hline
+RN-09 & Imagen & La resolución mínima aceptada será de 300$\times$300 píxeles, correspondiente al tamaño de entrada requerido por EfficientNet-B3. Imágenes con resolución menor serán rechazadas por el sistema con un mensaje informativo al usuario. \\
+\hline
+RN-10 & Edición & La herramienta de edición disponible antes del análisis será recorte de la imagen. \\
+\hline
+RN-11 & Edición & La herramienta de edición se aplicará únicamente antes del análisis. Una vez procesada la imagen, no podrá modificarse. \\
+\hline
+RN-12 & Edición & La edición de la imagen es opcional; el usuario podrá omitirla y proceder directamente al análisis. \\
+\hline
+RN-13 & Ubicación & Si la imagen proviene de la galería y contiene metadatos de ubicación, el sistema utilizará esas coordenadas como ubicación del árbol. \\
+\hline
+RN-14 & Ubicación & Si la imagen no contiene metadatos de ubicación, el sistema utilizará las coordenadas del GPS del dispositivo en el momento del registro. \\
+\hline
+RN-15 & Ubicación & Si no es posible obtener la ubicación por ninguna de las dos vías, el registro se guardará sin coordenadas y se marcará como \textbf{Ubicación no disponible}, sin bloquear el flujo de captura. \\
+\hline
+RN-16 & Registros & El usuario podrá eliminar manualmente un registro local antes de sincronizarlo. Esta acción será irreversible y requerirá confirmación explícita. \\
+\hline
+RN-17 & Registros & Cada registro local tendrá uno de los siguientes estados: \textbf{Pendiente de sincronización}, \textbf{Sincronizado} o \textbf{Error de sincronización}. \\
+\hline
+RN-18 & Registros & Cada registro local deberá contener como mínimo: imagen, resultado del modelo, timestamp de captura, coordenadas GPS y árbol asociado. \\
+\hline
+RN-19 & Sincronización & La sincronización automática se activará cuando el dispositivo detecte conexión a internet, ya sea por datos móviles o Wi-Fi. \\
+\hline
+RN-20 & Sincronización & En caso de fallo durante la sincronización, el sistema reintentará automáticamente hasta 3 veces antes de marcar el registro como \textbf{Error de sincronización}. \\
+\hline
+RN-21 & Sincronización & La fecha y hora de sincronización se almacenará como un campo adicional separado del timestamp original de captura. Ambos valores serán visibles en la app web. \\
+\hline
+RN-22 & Modelo & El resultado generado por el modelo se mostrará al experto inmediatamente después de la captura, etiquetado explícitamente como \textbf{Offline}. \\
+\hline
+
+RN-23 & Modelo & El sistema clasificará el árbol en dos categorías únicamente: \textbf{Sano} o \textbf{Infestado}. \\
+\hline
+
+% Sujeto a cambios en %
+RN-24 & Modelo & El modelo TFLite solo emitirá una clasificación si el nivel de confianza supera el 75\%. Si no supera ese umbral, el resultado se mostrará como \textbf{No determinado} y se recomendará al experto retomar la captura. \\
+\hline
+RN-25 & Alertas & De acuerdo con la NOM-019-SEMARNAT-2017 \cite{nom019_semarnat_2017}, se considerará \textbf{foco de infestación activo} cuando se registren 3 o más árboles clasificados como infectados dentro de una superficie de 1{,}000 m$^2$. \\
+\hline
+RN-26 & Interfaz & Los indicadores visuales de estado sanitario utilizarán el siguiente código de color: \textbf{verde} para sano, \textbf{rojo} para infestado y \textbf{amarillo} para no determinado. \\
+\hline
+
+
+
+
+
+
+
+RN-27 & Alertas & De acuerdo con la NOM-019-SEMARNAT-2017 \cite{nom019_semarnat_2017}, el sistema considerará que el experto está en proximidad de un foco de infestación cuando se encuentre a 100 metros o menos de las coordenadas de un árbol catalogado como foco. \\
+\hline
+RN-28 & Alertas & La alerta de proximidad se generará usando únicamente el GPS del dispositivo y los registros locales almacenados en SQLite, funcionando sin conexión a internet. \\
+\hline
+RN-29 & Alertas & No se emitirá más de una alerta por foco en un periodo de 60 minutos para evitar notificaciones repetitivas mientras el experto permanezca en la zona. \\
+
+
+
+
+
+
+
+
+
+
+
+
+
+\hline
+RN-30 & Jornada & El resumen de jornada considerará únicamente los registros cuyo timestamp de captura corresponda al día en curso, desde las 00:00 hasta las 23:59. \\
+\hline
+RN-31 & Jornada & El resumen de jornada se actualizará en tiempo real conforme el experto realice nuevas capturas durante la jornada. \\
+\hline
+RN-32 & Sincronización & El sistema debe permitir al usuario reintentar manualmente la sincronización de los registros marcados con estado \textbf{Error de sincronización}, siempre que el dispositivo cuente con conexión a internet activa. \\
+\hline
+RN-33 & Reportes & Los reportes generados desde la app web incluirán el historial sincronizado en la nube de un periodo de tiempo o de una zona específica. \\
+\hline
+RN-34 & Reportes & Todo reporte deberá incluir como mínimo: identificador del árbol, nombre del árbol, fecha y hora de captura, resultado de clasificación, coordenadas GPS y nombre del experto que realizó la captura. \\
+\hline
+RN-35 & Almacenamiento & La eliminación automática de registros del almacenamiento local solo podrá aplicarse a registros con estado \textbf{Sincronizado}. Los registros en estado \textbf{Pendiente} o \textbf{Error} no deberán eliminarse automáticamente hasta que sean sincronizados o eliminados manualmente por el usuario. \\
+\hline
+
+
+
+
+
+
+RN-36 & Historial & El historial visible en la app móvil mostrará únicamente los registros del dia actual. \\
+\hline
+
+
+
+
+
+
+
+
+RN-37 & Árboles & No puede existir una captura sin un árbol asociado. La selección o creación del árbol es un paso obligatorio antes de proceder al análisis. \\
+\hline
+RN-38 & Árboles & Al crear un nuevo árbol, el sistema generará automáticamente un identificador único. El usuario deberá asignar manualmente un nombre al árbol y seleccionar su especie de una lista predefinida basada en las especies hospederas documentadas para el Bosque de Chapultepec, entre ellas \textbf{Fresno} (\textit{Fraxinus uhdei}) y \textbf{Cedro blanco} (\textit{Cupressus lusitanica}), además de otras que el Administrador podrá gestionar desde la app web. \\
+\hline
+RN-39 & Árboles & El nombre asignado al árbol podrá complementarse con una descripción libre opcional, por ejemplo: \textit{Pino 1 con bordes irregulares en corteza}, para facilitar su identificación en campo. \\
+\hline
+RN-40 & Usuarios & Solo el rol \textbf{Administrador} podrá crear, editar, desactivar y asignar roles a usuarios. \\
+\hline
+RN-41 & Usuarios & El \textbf{Experto de campo} podrá editar registros de árboles y agregar observaciones en la app movil. \\
+\hline
+RN-42 & Historial & El historial en la app web no tendrá restricción de tiempo; mostrará todos los registros sincronizados desde el inicio del sistema. \\
+\hline
+
+
+
+
+
+
+
+
+
+RN-43 & Alertas & El radio de proximidad para alertas definido en RN-29 será configurable únicamente desde la app web por el \textbf{Administrador}. \\
+\hline
+
+
+
+
+
+
+
+
+
+
+RN-44 & Alertas & De acuerdo con la NOM-019-SEMARNAT-2017 \cite{nom019_semarnat_2017}, el sistema deberá considerar como periodos de mayor riesgo los meses de enero a mayo y de septiembre a noviembre, pudiendo emitir alertas estacionales en la app web durante estos periodos. \\
+\hline
+
+
+
+
+
+
+
+
+
+
+RN-45 & Modelo & Las evidencias visuales de infestación que el sistema buscará identificar mediante el modelo de clasificación incluyen: presencia de grumos de resina rojiza en el fuste, cambios de coloración del follaje de verde a verde amarillento o rojizo, y presencia visible de galerías o daños en la corteza. \\
+\hline
+
+
+
+
+
+
+
+
+% VER CUAL MLIB ES
+RN-46 & Análisis cromático & El análisis complementario de color se ejecutará de forma local en el dispositivo de forma concurrente al modelo TensorFlow Lite, utilizando OpenCV, sin requerir conexión a internet. \\
+\hline
+RN-47 & Análisis cromático & El análisis de color del follaje clasificará los píxeles en tres rangos cromáticos correspondientes a las fases de infestación documentadas: verde, verde-amarillento o verde limón, y café-rojizo. El resultado se expresará como porcentaje de cada rango sobre el total de píxeles analizados. \\
+\hline
+RN-48 & Análisis cromático & El análisis de color de la corteza clasificará los píxeles en los rangos cromáticos asociados a las fases de colonización subcortical: blanco/crema/rojizo, café-anaranjado y café-grisáceo. El resultado se expresará como porcentaje de cada rango sobre el total de píxeles analizados. \\
+
+
+
+
+
+
+
+
+
+
+
+
+\hline
+RN-49 & Análisis cromático & El análisis cromático se ejecutará de forma independiente según el tipo de imagen procesada, ya sea follaje o corteza, dado que cada nivel opera en un espacio visual distinto. No se realizarán comparaciones ni agregaciones cromáticas entre imágenes de diferente naturaleza dentro de un mismo análisis. \\
+\hline
+
+RN-50 & Almacenamiento & La base de datos local SQLite de la aplicación móvil no deberá almacenar imágenes como datos binarios de forma permanente. Únicamente deberá guardar metadatos del análisis y una referencia, ruta temporal o URL de la evidencia fotográfica.\\
+\hline
+
+
+RN-51 & Historial & La evidencia fotográfica completa solo estará disponible para consulta desde la plataforma web después de que el registro haya sido sincronizado correctamente con la nube.\\
+\hline
+
+RN-52 & Sincronización & La sincronización de datos se realizará únicamente desde la base local del dispositivo móvil hacia la base central en la nube. El sistema no contemplará la descarga automática de registros desde la nube hacia otros dispositivos móviles.\\
+\hline
+
+RN-53 & Historial & La aplicación web permitirá consultar y analizar los registros sincronizados desde los dispositivos móviles, pero no modificará los registros operativos generados en la app móvil.\\
+\hline
+
+RN-54 & Usuarios & Las funciones CRUD del Administrador aplicarán únicamente sobre datos administrativos o de configuración del sistema almacenados en la nube.\\
+\hline
+
+\end{longtable}
+
+\subsection{Catálogo de mensajes del sistema}
+La Tabla~\ref{tab:catalogoMensajes} presenta el catálogo de mensajes utilizados por el sistema para informar al usuario sobre errores, validaciones o estados relevantes durante la ejecución de los casos de uso.
+
+\begin{longtable}{|p{2.5cm}|p{10.5cm}|}
+\caption{Catálogo de mensajes del sistema.}
+\label{tab:catalogoMensajes} \\
+
+\hline
+\rowcolor{black}
+\textcolor{white}{\textbf{Código}} & \textcolor{white}{\textbf{Mensaje}} \\ \hline
+\endfirsthead
+
+\hline
+\rowcolor{black}
+\textcolor{white}{\textbf{Código}} & \textcolor{white}{\textbf{Mensaje}} \\ \hline
+\endhead
+
+\hline
+\endfoot
+
+\hline
+\endlastfoot
+
+MSG1 & Dato requerido faltante. \\ \hline
+MSG2 & El correo electrónico no está registrado. \\ \hline
+MSG3 & Contraseña incorrecta. \\ \hline
+MSG4 & La cuenta se encuentra desactivada. \\ \hline
+MSG5 & El dispositivo no está autorizado para esta cuenta. \\ \hline
+MSG6 & No fue posible enviar el correo de recuperación. \\ \hline
+MSG7 & El enlace o código de recuperación no es válido. \\ \hline
+MSG8 & El enlace o código de recuperación ha expirado. \\ \hline
+MSG9 & Las contraseñas no coinciden. \\ \hline
+MSG10 & La contraseña no cumple con los requisitos de seguridad. \\ \hline
+MSG11 & No existe una sesión activa. \\ \hline
+MSG12 & No fue posible cerrar la sesión correctamente. \\ \hline
+MSG13 & No existen registros para la jornada actual. \\ \hline
+MSG14 & No fue posible cargar la información local. \\ \hline
+MSG15 & No existen registros con el estado sanitario seleccionado. \\ \hline
+MSG16 & No fue posible cargar los registros recientes. \\ \hline
+MSG17 & No fue posible acceder a la cámara. \\ \hline
+MSG18 & No fue posible importar la imagen seleccionada. \\ \hline
+MSG19 & Imagen no válida para el análisis. \\ \hline
+MSG20 & No fue posible registrar la ubicación GPS. \\ \hline
+MSG21 & No fue posible guardar el análisis en la base local. \\ \hline
+MSG22 & No fue posible obtener la clasificación del estado sanitario. \\ \hline
+MSG23 & No fue posible recortar la imagen. \\ \hline
+MSG24 & Área de recorte no válida. \\ \hline
+MSG25 & No fue posible sincronizar el registro. \\ \hline
+MSG26 & No existen registros sincronizados disponibles. \\ \hline
+MSG27 & No fue posible cargar la información consolidada. \\ \hline
+MSG28 & No fue posible aplicar los filtros seleccionados. \\ \hline
+MSG29 & No se cuenta con permisos de administración. \\ \hline
+MSG30 & No fue posible cargar la información de usuarios. \\ \hline
+MSG31 & El correo electrónico ya se encuentra registrado. \\ \hline
+MSG32 & No fue posible guardar los cambios de la cuenta. \\ \hline
+MSG33 & El dispositivo ya se encuentra asociado a una cuenta. \\ \hline
+MSG34 & No fue posible asociar el dispositivo. \\ \hline
+MSG35 & No fue posible desasociar el dispositivo. \\ \hline
+
+\end{longtable}
+
+
+\subsection{Actores del sistema}
+Un actor representa cualquier entidad externa que interactúa con el sistema, ya sea una persona, un rol organizacional o un sistema externo. En el contexto de UML, los actores no forman parte del sistema en sí, sino que se relacionan con él a través de los casos de uso, iniciando acciones o recibiendo resultados de las mismas.
+
+Para el presente sistema, los actores fueron definidos considerando los roles operativos involucrados en el proceso de monitoreo forestal, así como los sistemas externos con los que ambos subsistemas se comunican.
+
+Por consiguiente, se identificaron los siguientes actores:
+
+\begin{enumerate}
+    \item \textbf{Experto de campo}\\
+    Persona encargada de utilizar la aplicación móvil en campo y la plataforma web para consultar la información sincronizada. Este actor registra árboles, realiza análisis del estado sanitario y consulta los datos generados durante la jornada.
+        \begin{itemize}
+            \item Iniciar sesión en la aplicación móvil o web.
+            \item Recuperar y restablecer contraseña.
+            \item Capturar o importar imágenes de árboles.
+            \item Recortar o repetir una imagen antes del análisis.
+            \item Asociar una imagen a un árbol nuevo o existente.
+            \item Registrar datos de árboles nuevos.
+            \item Modificar datos de árboles existentes desde la aplicación móvil.
+            \item Obtener la clasificación del estado sanitario del árbol.
+            \item Consultar el análisis complementario de color.
+            \item Consultar registros recientes de la jornada.
+            \item Consultar el historial local de análisis de la jornada.
+            \item Consultar el mapa local de árboles.
+            \item Filtrar registros, árboles o mapas según el estado sanitario u otros criterios disponibles.
+            \item Consultar notificaciones y alertas.
+            \item Reintentar manualmente la sincronización de registros con error.
+            \item Consultar información consolidada desde la plataforma web.
+            \item Consultar historial general, mapa general, estadísticas y perfil de usuario en la web.
+            \item Cerrar sesión.
+        \end{itemize}
+
+    \item \textbf{Administrador}\\
+    Persona encargada de gestionar las cuentas de usuario y los dispositivos asociados desde la plataforma web. Este actor no modifica los registros operativos capturados desde la aplicación móvil, sino que administra la información de acceso y configuración relacionada con las cuentas.
+        \begin{itemize}
+            \item Iniciar sesión en la plataforma web.
+            \item Recuperar y restablecer contraseña.
+            \item Crear cuentas de usuario.
+            \item Editar cuentas de usuario.
+            \item Desactivar cuentas de usuario.
+            \item Asignar roles de usuario.
+            \item Gestionar dispositivos asociados a una cuenta.
+            \item Asociar dispositivos móviles a una cuenta.
+            \item Desasociar dispositivos móviles de una cuenta.
+            \item Consultar dispositivos asociados a una cuenta.
+            \item Cerrar sesión.
+        \end{itemize}
+
+    \item \textbf{Sistema}\\
+    Componente encargado de ejecutar procesos automáticos internos necesarios para el funcionamiento de la aplicación móvil y la plataforma web.
+        \begin{itemize}
+            \item Almacenar registros en la base local SQLite del dispositivo móvil.
+            \item Sincronizar registros locales hacia la base de datos en la nube cuando exista conexión a internet.
+            \item Registrar el estado de sincronización de cada análisis.
+            \item Marcar registros como sincronizados tras confirmación del servidor.
+            \item Marcar registros con error de sincronización cuando corresponda.
+            \item Consolidar en la nube los registros enviados desde los dispositivos asociados a una cuenta.
+            \item Generar estadísticas, mapas y vistas consolidadas para la plataforma web.
+            \item Identificar focos de infestación activos a partir de los registros sincronizados.
+            \item Generar notificaciones de sincronización y alertas sanitarias.
+        \end{itemize}
+\end{enumerate}
+
+
+
+\subsection{Métricas de evaluación del proyecto}
+\subsubsection{Métricas de desempeño del modelo}
+\subsubsection{Métricas de desempeño del sistema}
+\subsubsection{Criterios de aceptación del prototipo}
+
+\subsection{Análisis de riesgos y restricciones}
+\subsubsection{Riesgos asociados al conjunto de datos}
+\subsubsection{Riesgos técnicos de implementación}
+\subsubsection{Restricciones del prototipo}
+
+\newpage
+\subsubsection{Medidas de mitigación}
+
+\subsection{Plan general de pruebas}
+\subsubsection{Pruebas del modelo de clasificación}
+\subsubsection{Pruebas del sistema}
+\subsubsection{Pruebas de integración}

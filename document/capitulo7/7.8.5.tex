@@ -1,0 +1,175 @@
+\newpage
+\subsubsection{Infraestructura en la nube}
+\label{subsec:infraestructura}
+
+La infraestructura del sistema se desplegará sobre Amazon Web Services
+(AWS), adoptando un modelo serverless que elimina la necesidad de
+gestionar servidores y permite escalar automáticamente según la demanda.
+La elección de AWS como proveedor de nube se fundamenta en un conjunto
+de factores técnicos, económicos y estratégicos que lo posicionan como
+la opción más adecuada para el desarrollo y evolución del prototipo,
+tal como se justifica en detalle en la sección~\ref{subsec:justificacion_aws}.
+
+\textbf{Capa gratuita (AWS Free Tier).} AWS ofrece una capa gratuita
+que cubre los servicios principales utilizados en este proyecto. A
+diferencia de otros proveedores, AWS distingue entre dos tipos de
+ofertas gratuitas \cite{aws_free_tier}:
+
+\begin{itemize}
+    \item \textbf{Siempre gratuitos (Always Free):} Sin fecha de
+    expiración, disponibles indefinidamente mientras se respeten los
+    límites mensuales establecidos. Los servicios del sistema cubiertos
+    bajo esta categoría son:
+    \begin{itemize}
+        \item \textbf{AWS Lambda:} 1 millón de invocaciones y 400,000
+        GB-segundos de cómputo al mes.
+        \item \textbf{Amazon API Gateway:} 1 millón de llamadas REST
+        al mes.
+        \item \textbf{Amazon CloudFront:} 1 TB de transferencia de
+        datos y 10 millones de solicitudes HTTP/S al mes.
+        \item \textbf{Amazon S3:} 5 GB de almacenamiento estándar,
+        20,000 solicitudes GET y 2,000 solicitudes PUT al mes.
+        \item \textbf{Amazon Cognito:} 50,000 usuarios activos mensuales
+        sin costo.
+    \end{itemize}
+    \item \textbf{Gratuitos por 12 meses:} Disponibles desde la
+    creación de la cuenta AWS. En esta categoría se encuentra
+    \textbf{Amazon RDS}, que ofrece 750 horas mensuales de instancia
+    \texttt{db.t2.micro} con PostgreSQL, suficiente para cubrir la
+    fase de desarrollo y pruebas del prototipo.
+\end{itemize}
+
+Esta disponibilidad permite desarrollar, desplegar y validar el
+prototipo completo sin incurrir en costos de infraestructura durante
+la fase de desarrollo, lo cual representa una ventaja significativa
+para un proyecto académico con recursos limitados.
+
+\textbf{Modelo de pago por uso.} Fuera de la capa gratuita, AWS opera
+bajo un modelo de pago por uso donde únicamente se factura por los
+recursos efectivamente consumidos, sin compromisos de gasto mínimo
+ni contratos de largo plazo. Esto permite que el costo del sistema
+crezca de forma proporcional al uso real. Por ejemplo, AWS Lambda
+cobra \$0.20 USD por cada millón de invocaciones adicionales y
+\$0.0000166667 USD por GB-segundo de cómputo, lo que resulta en
+costos mínimos para un prototipo con tráfico reducido
+\cite{aws_lambda_pricing}.
+
+\textbf{Facilidad de uso y ecosistema integrado.} AWS provee una
+consola de administración unificada, documentación extensa y una
+amplia comunidad de soporte. La integración nativa entre sus servicios
+reduce considerablemente la complejidad operativa: API Gateway invoca
+Lambda directamente, Lambda accede a RDS y S3 dentro de la misma
+región sin costos de transferencia adicionales, y CloudFront sirve
+el contenido de S3 de forma transparente. Esta cohesión entre servicios
+acelera los tiempos de desarrollo y despliegue del sistema.
+
+\textbf{Escalabilidad automática.} El modelo serverless adoptado
+mediante AWS Lambda escala automáticamente en función de la demanda,
+creando instancias adicionales de forma transparente sin intervención
+manual. Este comportamiento es especialmente relevante considerando
+que el sistema podría extenderse a otros bosques o reservas naturales
+en el futuro, incrementando el número de dispositivos móviles que
+sincronizan datos simultáneamente.
+
+\textbf{Disponibilidad global y baja latencia.} AWS cuenta con más
+de 30 regiones geográficas y más de 400 puntos de presencia (PoP)
+de CloudFront distribuidos globalmente \cite{aws_cloudfront_pricing}.
+Para el caso de estudio del Bosque de Chapultepec, la región
+\texttt{us-east-1} (Norte de Virginia) ofrece baja latencia desde
+México con alta disponibilidad garantizada mediante zonas de
+disponibilidad redundantes.
+
+\textbf{Proyección a un ambiente productivo.} El prototipo está
+diseñado desde su arquitectura para escalar hacia un ambiente
+productivo sin cambios estructurales. En una fase de producción,
+el sistema podría incorporar los siguientes servicios adicionales
+dentro del mismo ecosistema AWS:
+
+\begin{itemize}
+    \item \textbf{Amazon RDS Multi-AZ:} Alta disponibilidad de la
+    base de datos mediante replicación automática en múltiples zonas
+    de disponibilidad.
+    \item \textbf{AWS WAF:} Firewall de aplicaciones web para
+    protección contra ataques como inyección SQL y cross-site scripting.
+    \item \textbf{Amazon CloudWatch:} Monitoreo en tiempo real de
+    métricas, logs y alertas operativas del sistema.
+    \item \textbf{Amazon Route 53:} Gestión de dominios y enrutamiento
+    de tráfico con alta disponibilidad.
+    \item \textbf{AWS Budgets:} Control y alertas de costos para
+    evitar gastos inesperados al superar los límites de la capa gratuita.
+\end{itemize}
+
+Esta trayectoria de crecimiento es posible gracias a que AWS ofrece
+todos estos servicios dentro del mismo ecosistema, sin necesidad de
+migrar a otro proveedor ni rediseñar la arquitectura base del sistema.
+El análisis comparativo detallado entre AWS, Microsoft Azure y Google
+Cloud Platform, así como la justificación económica y técnica de esta
+elección, se presentan en la sección~\ref{subsec:justificacion_aws}
+del análisis financiero.
+
+A continuación se describen los servicios que conforman la arquitectura
+en la nube del sistema.
+
+\textbf{Amazon API Gateway} actuará como punto de entrada unificado
+para todas las peticiones REST del sistema, tanto de la aplicación
+móvil durante la sincronización como de la aplicación web. Se encargará
+de enrutar cada petición hacia la función Lambda correspondiente,
+aplicando políticas de control de acceso y limitación de tasa.
+
+\textbf{AWS Lambda} alojará el backend del sistema desarrollado con
+Micronaut. Al ser serverless, cada invocación es independiente y el
+escalado es automático, eliminando la necesidad de aprovisionar o
+gestionar servidores. El código se desplegará automáticamente mediante
+el pipeline de CI/CD configurado en GitHub Actions.
+
+\textbf{Amazon RDS (PostgreSQL)} será el motor de base de datos
+relacional central del sistema. Almacenará de forma persistente los
+datos sincronizados desde los dispositivos móviles, incluyendo
+registros de árboles, capturas, resultados de clasificación,
+coordenadas GPS e información de usuarios.
+
+\textbf{Amazon S3} gestionará el almacenamiento de objetos no
+estructurados del sistema: las imágenes capturadas por los dispositivos
+móviles, los artefactos estáticos compilados de la aplicación Angular
+y el modelo en formato \texttt{.tflite} distribuido a los dispositivos.
+
+\textbf{Amazon CloudFront} distribuirá globalmente el frontend Angular
+mediante una red de distribución de contenido (CDN), sirviendo los
+artefactos estáticos almacenados en S3 con baja latencia desde
+ubicaciones geográficamente cercanas al usuario.
+
+\textbf{Amazon Cognito} gestionará la identidad y autenticación de
+los usuarios de la plataforma web, proveyendo flujos de inicio de
+sesión, recuperación de contraseña y emisión de tokens JWT para el
+control de acceso por roles.
+
+\textbf{Amazon SageMaker} se empleará exclusivamente como plataforma
+de registro y versionado del modelo de clasificación. Permitirá llevar
+control de las versiones del modelo entrenado antes de publicarlo en
+Amazon S3 para su distribución al dispositivo móvil, sin participar
+en el proceso de inferencia en tiempo real.
+
+\textbf{AWS Certificate Manager (ACM)} proveerá y renovará
+automáticamente los certificados SSL/TLS asociados a CloudFront y
+API Gateway, garantizando que todas las comunicaciones entre los
+clientes y la nube se realicen a través de HTTPS, cumpliendo con el
+requerimiento no funcional RNF-05.
+
+\textbf{Amazon CloudWatch} se empleará para el monitoreo del sistema
+durante el desarrollo y las pruebas del prototipo. Permitirá consultar
+los logs generados por las funciones Lambda, monitorear el uso de
+Amazon RDS y recibir alertas ante errores o comportamientos inesperados
+del backend. Dentro de la capa gratuita, CloudWatch ofrece 5 GB de
+ingesta de logs y 10 métricas personalizadas al mes sin costo adicional
+\cite{aws_free_tier}.
+
+\textbf{GitHub Actions} automatizará el pipeline de integración y
+entrega continua (CI/CD) del backend. Ante cada cambio en el
+repositorio, ejecutará las pruebas automatizadas, compilará el
+proyecto Micronaut y desplegará la nueva versión en AWS Lambda de
+forma transparente.
+
+Adicionalmente, el sistema contará con un \textbf{servidor local
+Raspberry Pi} utilizado como entorno de pruebas durante el desarrollo,
+permitiendo validar el comportamiento del backend y la sincronización
+de datos en un entorno controlado antes del despliegue en la nube.

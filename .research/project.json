@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "projectId": "f6559b53-37e7-4e4d-b257-7368d0fd2dae",
+  "name": "TT1-Documentacion",
+  "rootDocuments": [
+    {
+      "path": "main.tex",
+      "name": "main",
+      "isDefault": true
+    }
+  ],
+  "primaryBibliography": "bibliografia.bib",
+  "trusted": false,
+  "engine": "xelatex",
+  "venue": "neurips",
+  "wordBudget": null,
+  "pageBudget": 9,
+  "spellingWords": []
+}

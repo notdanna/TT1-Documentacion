@@ -1,0 +1,14 @@
+\subsection{Modelos de referencia para clasificación de imágenes}
+
+En esta sección se describen los modelos candidatos para el prototipo, considerando su arquitectura, eficiencia y viabilidad en dispositivos móviles.
+
+\subsubsection{ResNet-50}
+Es una arquitectura CNN profunda de 50 capas ampliamente utilizada como baseline en tareas de clasificación de imágenes. Cuenta con aproximadamente 25 millones de parámetros y un tamaño cercano a los 98 MB, lo que la hace poco viable para despliegue móvil directo, pero útil como referencia de comparación durante el entrenamiento.
+\subsubsection{MobileNetV3}
+Es una evolución de la familia MobileNet optimizada mediante búsqueda de arquitectura neuronal (NAS). Incorpora capas de atención ligeras y activaciones h-swish que mejoran su eficiencia. Con menos de 5 MB, es una opción sólida para inferencia en Android.
+
+\subsubsection{EfficientNet-B0/B1/B3} 
+Esta aplica un escalado compuesto que ajusta simultáneamente la profundidad, el ancho y la resolución del modelo en proporción balanceada. EfficientNet-B0 parte de apenas 5.3 MB y ofrece una precisión superior a MobileNetV3 en ImageNet con un tamaño comparable, posicionándose como una de las mejores opciones para esta aplicación \cite{Tan2019EfficientNetRM}.
+
+\subsubsection{MobileViT} 
+Es una arquitectura híbrida que combina convoluciones locales con bloques de atención tipo Transformer. Aunque más ligera que un ViT estándar, su costo computacional es mayor que el de MobileNetV3 o EfficientNet, y su soporte en TFLite es menos maduro, lo que limita su viabilidad práctica para este proyecto.

@@ -1,0 +1,21 @@
+\subsection{Comparación de modelos candidatos}
+
+A continuación se presenta una comparación de los modelos candidatos evaluados, considerando los criterios discutidos a lo largo del capítulo. La precisión reportada corresponde al benchmark ImageNet y sirve como referencia del potencial de cada arquitectura antes del fine-tuning.
+
+\begin{table}[H]
+\centering
+\caption{Comparación de modelos candidatos}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Modelo} & \textbf{Parámetros} & \textbf{Tamaño} & \textbf{Top-1 ImageNet} & \textbf{TFLite} \\
+\hline
+ResNet-50        & 25.6 M & 98 MB  & 76.0\% & Parcial  \\
+MobileNetV3      & 5.4 M  & 4.9 MB & 75.2\% & Nativo   \\
+EfficientNet-B0  & 5.3 M  & 5.3 MB & 77.1\% & Nativo   \\
+EfficientNet-B1  & 7.8 M  & 7.8 MB & 79.1\% & Nativo   \\
+EfficientNet-B3  & 12.3 M & 48 MB  & 81.6\% & Nativo   \\
+MobileViT-S      & 5.6 M  & 22 MB  & 78.4\% & Limitado \\
+\hline
+\end{tabular}
+\label{tab:comparacion_modelos}
+\end{table}

@@ -1,0 +1,15 @@
+\subsection{Limitaciones de los enfoques tradicionales en escenarios reales}
+
+Una vez revisados los principales algoritmos de clasificación tradicionales, es importante analizar las limitaciones que presentan cuando se aplican a problemas de visión por computadora en condiciones reales.
+
+Aunque los algoritmos tradicionales de clasificación han mostrado utilidad en distintos contextos, su aplicación en tareas de visión por computadora presenta limitaciones importantes. Una de las principales radica en que estos métodos suelen requerir una etapa previa de preprocesamiento de la imagen, la cual puede incluir operaciones como segmentación, mejora de imagen y refinamiento, para después realizar una extracción manual de características con la que se construye el modelo de reconocimiento \cite{liu2022high_similarity}.
+
+Bajo esta lógica, el desempeño del sistema no depende únicamente del clasificador empleado, sino también de la calidad de la representación visual que se construye antes de la etapa de clasificación. En otras palabras, si las características extraídas no logran describir de manera adecuada la información contenida en la imagen, la capacidad del modelo para distinguir entre clases se ve limitada \cite{liu2022high_similarity}.
+
+Además, este tipo de extracción manual presenta restricciones para representar estructuras de nivel medio y alto dentro de la imagen, así como información semántica más compleja. A ello se suma que los algoritmos tradicionales pueden resultar costosos en tiempo de procesamiento y difíciles de aplicar en contextos reales o de producción, particularmente cuando las condiciones de trabajo no son controladas \cite{liu2022high_similarity}.
+
+En el caso del presente proyecto, estas limitaciones adquieren mayor relevancia debido a que las imágenes son recolectadas directamente en campo, lo que implica variaciones naturales en iluminación, ángulo de captura, fondo y apariencia de los árboles. En este tipo de escenarios, un enfoque que dependa de manera estricta del preprocesamiento y de la extracción manual de características puede resultar insuficiente para representar la complejidad visual del problema. 
+
+A partir de ello, se vuelve necesario considerar métodos con mayor capacidad para aprender representaciones directamente a partir de los datos.
+
+

@@ -1,0 +1,116 @@
+\newpage
+\subsubsection{Costos asociados a servicios en la nube}
+
+La justificación detallada de la selección de AWS como proveedor de
+infraestructura en la nube, incluyendo la comparativa con Microsoft
+Azure y Google Cloud Platform, se presenta en la
+sección~\ref{subsec:justificacion_aws}.
+
+Los servicios en la nube del sistema se desplegarán sobre Amazon Web
+Services (AWS), aprovechando la capa gratuita disponible durante la
+fase de prototipo. La Tabla~\ref{tab:costos_aws} detalla los límites
+gratuitos de cada servicio utilizado y su aplicabilidad al prototipo.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}m{3.5cm}|>
+{\raggedright\arraybackslash}m{4.5cm}|>{\centering\arraybackslash}m{2cm}|>
+{\raggedright\arraybackslash}m{3.5cm}|}
+\caption{Límites de la capa gratuita de AWS aplicables al prototipo.}
+\label{tab:costos_aws} \\
+\hline
+\textbf{Servicio} & \textbf{Límite gratuito} & \textbf{Tipo} & \textbf{Costo estimado} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{Servicio} & \textbf{Límite gratuito} & \textbf{Tipo} & \textbf{Costo estimado} \\
+\hline
+\endhead
+
+AWS Lambda & 1M invocaciones/mes y 400,000 GB-seg/mes & Siempre gratuito & \$0.00 USD \\
+\hline
+Amazon API Gateway & 1M llamadas REST/mes & Siempre gratuito & \$0.00 USD \\
+\hline
+Amazon S3 & 5 GB almacenamiento, 20,000 GET, 2,000 PUT/mes & Siempre gratuito & \$0.00 USD \\
+\hline
+Amazon CloudFront & 1 TB transferencia y 10M solicitudes/mes & Siempre gratuito & \$0.00 USD \\
+\hline
+Amazon Cognito & 50,000 usuarios activos/mes & Siempre gratuito & \$0.00 USD \\
+\hline
+Amazon RDS (PostgreSQL) & 750 hrs/mes instancia db.t2.micro & 12 meses & \$0.00 USD \\
+\hline
+Amazon SageMaker & 250 hrs/mes instancia t2.micro & 2 meses & \$0.00 USD \\
+\hline
+AWS Certificate Manager & Certificados SSL/TLS ilimitados & Siempre gratuito & \$0.00 USD \\
+\hline
+Amazon CloudWatch & 5 GB logs y 10 métricas/mes & Siempre gratuito & \$0.00 USD \\
+\hline
+\textbf{Total con capa gratuita} & & & \textbf{\$0.00 USD} \\
+\hline
+\end{longtable}
+
+Durante los primeros 12 meses de desarrollo del prototipo, todos los
+servicios AWS utilizados se mantendrán dentro de los límites de la
+capa gratuita, resultando en un costo de infraestructura en la nube
+de \textbf{\$0.00 USD}. El sistema contará con un máximo de 3
+dispositivos móviles activos y un número reducido de usuarios en la
+plataforma web, lo que garantiza que las invocaciones de Lambda, las
+solicitudes a API Gateway y el almacenamiento en RDS y S3 no superen
+los umbrales establecidos \cite{aws_free_tier}.
+
+No obstante, la Tabla~\ref{tab:costos_aws_real} presenta la estimación
+del costo real de los servicios sin considerar la capa gratuita,
+generada mediante AWS Pricing Calculator \cite{aws_calculator_prototipo}.
+Este escenario representa el costo máximo en que incurriría el prototipo
+si la cuenta AWS excediera los límites gratuitos o si los 12 meses
+del free tier expiraran durante el desarrollo.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}m{4cm}|>
+{\raggedright\arraybackslash}m{4.5cm}|>{\centering\arraybackslash}m{2.5cm}|>
+{\centering\arraybackslash}m{2.5cm}|}
+\caption{Estimación de costos reales del prototipo sin capa gratuita (AWS Pricing Calculator, us-east-1, 2026).}
+\label{tab:costos_aws_real} \\
+\hline
+\textbf{Servicio} & \textbf{Configuración} & \textbf{Mensual (USD)} & \textbf{Mensual (MXN)} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{Servicio} & \textbf{Configuración} & \textbf{Mensual (USD)} & \textbf{Mensual (MXN)} \\
+\hline
+\endhead
+
+AWS Lambda & ARM64, 100K invocaciones, 128 MB, 300ms & \$0.00 & \$0.00 \\
+\hline
+Amazon API Gateway & 100K llamadas REST/mes & \$0.10 & \$1.75 \\
+\hline
+Amazon RDS PostgreSQL & db.t2.micro, Single-AZ, 20 GB gp2 & \$24.64 & \$431.20 \\
+\hline
+Amazon S3 & 5 GB estándar, 20K GET, 2K PUT & \$0.13 & \$2.28 \\
+\hline
+Amazon CloudFront & Free Plan & \$0.00 & \$0.00 \\
+\hline
+Amazon Cognito & 10 usuarios activos/mes & \$1.00 & \$17.50 \\
+\hline
+Amazon CloudWatch & 1 GB logs, 5 métricas & \$2.00 & \$35.00 \\
+\hline
+\textbf{Total mensual} & & \textbf{\$27.87 USD} & \textbf{\$487.73 MXN} \\
+\hline
+\textbf{Total 12 meses} & & \textbf{\$334.44 USD} & \textbf{\$5,852.70 MXN} \\
+\hline
+\end{longtable}
+
+El costo dominante en este escenario corresponde a \textbf{Amazon RDS}
+(\$24.64 USD/mes), que representa el 88\% del gasto mensual total.
+Sin embargo, dado que RDS está cubierto por el free tier durante los
+primeros 12 meses, el costo real esperado del prototipo sin RDS
+asciende únicamente a \textbf{\$3.23 USD/mes (\$56.53 MXN/mes)},
+lo que confirma la viabilidad económica del prototipo incluso fuera
+de la capa gratuita.
+
+La estimación completa puede consultarse en el siguiente enlace
+generado por AWS Pricing Calculator:
+
+\begin{center}
+\url{https://calculator.aws/#/estimate?id=f1906b6e6936514d8325160110c97fc1d367d5de}
+\end{center}
+\cite{aws_calculator_prototipo}

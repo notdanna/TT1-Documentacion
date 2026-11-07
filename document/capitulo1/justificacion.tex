@@ -1,0 +1,34 @@
+
+\subsection{Justificación}
+
+Los bosques de la Ciudad de México abarcan miles de hectáreas y reciben durante cada año a millones de visitantes, quienes caminan día con día recorriendo el arbolado, mientras que, detrás de ese paisaje, plagas aparentemente silenciosas han estado provocando la destrucción masiva de un ecosistema forestal que cumple funciones ecológicas, económicas y sociales fundamentales.
+
+Como se menciona \cite{vega2022mongabay}, existen plagas que afectan negativamente los bosques de México en mayor o menor medida. Entre estas plagas, el objeto de estudio del proyecto presentado es el escarabajo descortezador. Estos pequeños insectos en un ambiente controlado actúan como reguladores del ecosistema, sin embargo, cuando en los bosques templados se presentan actividades como incendios forestales, tala desmedida o ciertos efectos del cambio climático, se incrementa la proliferación de estos escarabajos, produciendo efectos adversos hasta volverse una plaga. \cite{forestal2025insectos}
+
+Conforme a la CONAFOR \cite{forestal2025insectos}: ``Los descortezadores son pequeños escarabajos que viven debajo de la corteza del árbol y se alimentan del tejido que conduce los nutrientes de este, provocando frecuentemente la muerte del arbolado.''
+
+Debido a lo anterior, la plaga del insecto descortezador es vista como un problema forestal a nivel nacional que afecta una gran cantidad de arbolado, situándose en segundo lugar después de los incendios forestales. Incluso, la CONAFOR considera a 5 estados en \textit{muy alto riesgo}, los cuales son Ciudad de México, Chihuahua, Durango, Jalisco, Estado de México y Michoacán. \cite{rn2025radiografia}
+
+Las afectaciones que han tenido los bosques urbanos de la Ciudad de México varían respecto a cada zona, sin embargo, todas presentan problemas relacionados con la salud del arbolado. Un ejemplo representativo es el Bosque de Chapultepec, donde según indica Karla Mora, la SEDEMA estimó que aproximadamente 200 árboles padecían de afecciones, principalmente los fresnos \cite{mora2022chapultepec}.
+
+Incluso, Reséndiz \textit{et al.} \cite{resendiz2019salud} reporta lo siguiente:
+
+\begin{quote}
+En los fresnos también se detectó la presencia del descortezador Hylesinus sp. afectando directamente ramas y tallos. La magnitud del daño causado por el coleóptero en el arbolado provocó incidencias de 2.4\%; de acuerdo a Martínez-Trejo et al. (2016) este tipo de escolítidos con hábitos de barrenar y descortezar ramas y tallos, y con fines de alimentación, construyen galerías en ramas jóvenes que son destinadas a la producción, lo mismo que generan galerías de reproducción en troncos y ramas gruesas de árboles debilitados.
+
+Además, en el arbolado de C. lusitanica se presentó el descortezador (Phloeosinus sp.) con afectaciones de 4.08\% en la población forestal de esta especie de cedro. Este coleóptero es importante en áreas urbanas donde hay Cupressaceae, la principal característica de este curculiónido radica en que las infestaciones las realiza en árboles que se encuentran debilitados por estrés hídrico o que se encuentran en decadencia, además Tórres y Sánchez (2006) confirman que Phloeosinus sp. afecta a Cupressus arizonica (pp.152-153).
+\end{quote}
+
+Otro ejemplo de la presencia de esta plaga se observa en el Parque República de Líbano, en donde se tiene registrado que entre 2017 y 2020 se perdieron de 500 a 600 árboles y de 80 a 90 árboles tan solo de marzo a agosto de 2024. \cite{rn2025radiografia}
+
+Por otra parte, como se señala en \cite{rn2025radiografia}, el problema para crear una solución eficiente es que no hay una estrategia colectiva para darle atención a la plaga, ya que el monitoreo de esta se hace por secciones y con un enfoque que no es preventivo, sino más bien reactivo.
+
+Considerando el panorama expuesto, se hace evidente la necesidad de desarrollar un sistema que identifique automáticamente la presencia de plagas de insectos descortezadores en los árboles, con el propósito de identificarlas tempranamente para poder frenar en gran medida su proliferación y dar atención focalizada en áreas ya infestadas.
+
+La propuesta que se presenta es un sistema móvil que, a partir de fotografías tomadas del arbolado de uno de los bosques de la Ciudad de México y analizadas en la nube mediante modelos de visión por computadora, determine si un árbol presenta o no indicios de infestación de insectos descortezadores y mantenga un historial del estado de salud de cada ejemplar.
+
+El sistema \textit{agrega un valor} significativo porque es \textit{replicable}, ya que, a futuro, podría implementarse en otros bosques alrededor de la ciudad o el país, adaptándose a las especies de árboles del lugar y sus plagas más recurrentes. Por otra parte, también es escalable, ya que, debido a que utilizaremos servicios en la nube, el sistema nos permitirá comenzar en un sitio específico y, de manera progresiva, extenderse a otros sitios forestales.
+
+Cabe mencionar que, también se considera como un sistema \textit{adaptativo}, debido a que los modelos que serán utilizados para su elaboración pueden entrenarse y actualizarse con un data-set de nuevas imágenes, manteniendo tanto la precisión de la predicción, como la migración del enfoque del sistema hacia especies de árboles de otros sitios.
+
+Finalmente, dado que el sistema se implementará a través de una aplicación móvil, este será \textit{accesible} tanto para especialistas dedicados al área competente, como para el personal del bosque encargado de la protección del área natural.

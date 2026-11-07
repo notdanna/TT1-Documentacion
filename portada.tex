@@ -1,0 +1,84 @@
+\begin{titlepage}
+    \thispagestyle{empty}
+
+   \begin{tikzpicture}[remember picture,overlay]
+    % Logo IPN arriba izquierda
+    \node[anchor=north west] at ([xshift=0.25cm,yshift=-0.25cm]current page.north west)
+        {\includegraphics[height=3cm]{images/logos/ipn_logo.png}};
+
+    % Logo ESCOM abajo izquierda
+    \node[anchor=south west] at ([xshift=0.25cm,yshift=0.25cm]current page.south west)
+        {\includegraphics[height=2.2cm]{images/logos/logo_escom.png}};
+
+    % Franja vertical azul estilo ESCOM
+    \draw[line width=0.9pt, azulescom]
+        ([xshift=1.48cm,yshift=-3.85cm]current page.north west) --
+        ([xshift=1.48cm,yshift=2.95cm]current page.south west);
+    
+    \draw[line width=2.6pt, azulescom]
+        ([xshift=1.70cm,yshift=-3.85cm]current page.north west) --
+        ([xshift=1.70cm,yshift=2.95cm]current page.south west);
+    
+    \draw[line width=0.9pt, azulescom]
+        ([xshift=1.92cm,yshift=-3.85cm]current page.north west) --
+        ([xshift=1.92cm,yshift=2.95cm]current page.south west);
+\end{tikzpicture}
+
+    \begin{center}
+        \vspace*{1.6cm}
+
+        {\fontsize{20}{24}\selectfont\bfseries INSTITUTO POLITÉCNICO NACIONAL\par}
+        \vspace{0.2cm}
+        {\fontsize{16}{19}\selectfont\bfseries ESCUELA SUPERIOR DE CÓMPUTO\par}
+
+        \vspace{1.5cm}
+
+        {\fontsize{20}{24}\selectfont\bfseries ESCOM\par}
+
+        \vspace{1.6cm}
+
+        {\fontsize{14}{17}\selectfont\itshape Trabajo Terminal\par}
+
+        \vspace{1.1cm}
+
+        {\fontsize{16}{19}\selectfont\bfseries “Prototipo de sistema móvil de detección de insectos\par}
+        \vspace{0.1cm}
+        {\fontsize{16}{19}\selectfont\bfseries descortezadores en árboles mediante visión por computadora.\par}
+        \vspace{0.1cm}
+        {\fontsize{16}{19}\selectfont\bfseries Caso de estudio: Bosque de Chapultepec”\par}
+
+        \vspace{0.8cm}
+
+        {\fontsize{14}{17}\selectfont 2026-B161\par}
+
+        \vfill
+
+        {\fontsize{14}{17}\selectfont\itshape Presentan\par}
+        \vspace{0.2cm}
+        {\fontsize{14}{17}\selectfont\bfseries Karime Calero Alvarez\par}
+        \vspace{0.2cm}
+        {\fontsize{14}{17}\selectfont\bfseries Ángel Damián Franco Rayas\par}
+        \vspace{0.2cm}
+        {\fontsize{14}{17}\selectfont\bfseries Miguel Ángel Gómez López\par}
+
+        \vspace{1.4cm}
+
+        {\fontsize{14}{17}\selectfont\itshape Directores\par}
+
+        \vspace{0.8cm}
+
+        \begin{minipage}{0.42\textwidth}
+            \centering
+            {\fontsize{14}{17}\selectfont\bfseries Ing. Ariel López Rojas\par}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.42\textwidth}
+            \centering
+            {\fontsize{14}{17}\selectfont\bfseries Dra. Vanessa Alejandra Camacho Vázquez \par}
+        \end{minipage}
+
+        \vfill
+
+        {\fontsize{12}{14}\selectfont Ciudad de México, mayo de 2026\par}
+    \end{center}
+\end{titlepage}

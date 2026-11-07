@@ -1,0 +1,52 @@
+\newpage
+\subsubsection{Requerimientos no funcionales}
+Los requisitos no funcionales establecen las restricciones de calidad, rendimiento y operación bajo las cuales el sistema debe funcionar, independientemente de las funcionalidades que provee. La Tabla 4 los detalla.
+
+\begin{longtable}{|>{\centering\arraybackslash}m{1.8cm}|>{\centering\arraybackslash}m{2.5cm}|m{9.5cm}|}
+\caption{Requerimientos no funcionales de la aplicación móvil y la plataforma web}\label{tab:rnf} \\
+\hline
+\textbf{ID} & \textbf{Categoría} & \textbf{Descripción} \\
+\hline
+\endfirsthead
+\multicolumn{3}{c}%
+{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{ID} & \textbf{Categoría} & \textbf{Descripción} \\
+\hline
+\endhead
+
+RNF-01 & Rendimiento & El sistema debe devolver el resultado del análisis (sano/infectado) en un tiempo máximo de X segundos una vez que la imagen ha sido cargada exitosamente en la nube. \\
+\hline
+RNF-02 & Portabilidad & El tamaño de la aplicación móvil instalada no debe exceder los 50 MB, asegurando que pueda ser instalada en dispositivos de gama media sin saturar el almacenamiento. \\
+\hline
+RNF-03 & Usabilidad & Las transiciones entre las pantallas de la aplicación, como pasar del mapa al historial del árbol, no deben demorar más de X segundos. \\
+\hline
+RNF-04 & Eficiencia & La aplicación debe estar optimizada para no realizar procesos en segundo plano innecesarios, minimizando el consumo de batería del dispositivo durante las jornadas de inspección en el bosque. \\
+\hline
+RNF-05 & Seguridad & Toda comunicación entre la aplicación móvil y los servicios en la nube, incluyendo el envío de credenciales, imágenes y coordenadas, debe realizarse a través de protocolos seguros como HTTPS. \\
+\hline
+RNF-06 & Seguridad & Las contraseñas de los usuarios deben almacenarse en la base de datos utilizando algoritmos de hashing para evitar su exposición. \\
+\hline
+RNF-07 & Seguridad & El sistema debe cerrar automáticamente la sesión del usuario tras un periodo prolongado de inactividad, por ejemplo 24 horas, para proteger los datos en caso de extravío del dispositivo. \\
+\hline
+RNF-08 & Precisión & El modelo de visión por computadora debe alcanzar y mantener un porcentaje mínimo de precisión de X\% en la correcta clasificación de los árboles infestados por descortezadores. \\
+\hline
+RNF-09 & Arquitectura & El sistema debe respetar una arquitectura cliente-servidor, delegando el procesamiento pesado del modelo de inteligencia artificial a la nube. \\
+\hline
+RNF-10 & Persistencia & El sistema debe contar con una base de datos relacional o no relacional optimizada para manejar consultas rápidas del historial forestal y referenciar los archivos de imágenes. \\
+\hline
+RNF-11 & Implementación & La aplicación cliente debe ser desarrollada de forma nativa para el sistema operativo Android utilizando el lenguaje de programación \textbf{Kotlin}, garantizando un acceso óptimo al hardware del dispositivo, como cámara, GPS y almacenamiento local. \\
+\hline
+RNF-12 & Implementación & El modelo de visión por computadora para la detección de insectos descortezadores debe ser programado en Python, utilizando \textit{frameworks} especializados en aprendizaje profundo, como TensorFlow o PyTorch. \\
+\hline
+RNF-13 & Rendimiento & Debido a que el análisis de imágenes puede tomar algunos segundos, el backend en Python debe manejar las peticiones de forma asíncrona para no bloquear la interfaz de usuario en la aplicación Kotlin. \\
+\hline
+RNF-14 & Mantenibilidad & El proyecto móvil debe utilizar Gradle para la gestión de librerías, mientras que el entorno de Python debe usar gestores como \textit{pip} o \textit{conda} para asegurar la replicabilidad del entorno de desarrollo. \\
+\hline
+RNF-15 & Persistencia & La aplicación cliente en Android debe implementar \textbf{SQLite}, preferentemente mediante la librería \textit{Room}, para el almacenamiento estructurado y local de la información. Esto permitirá guardar temporalmente los datos de las capturas cuando el usuario se encuentre en zonas sin conexión a internet, garantizando el uso básico \textit{offline}. \\
+\hline
+RNF-16 & Persistencia & El backend del sistema debe utilizar \textbf{PostgreSQL} como motor de base de datos relacional principal. Esta base de datos será la encargada de almacenar de forma centralizada, segura y escalable las credenciales de acceso de los usuarios, así como el historial completo y digitalizado del estado sanitario de cada árbol evaluado. \\
+\hline
+RNF-17 & Integridad & El sistema debe cambiar el estado local de los registros en SQLite a ``Sincronizado'' o eliminarlos localmente una vez que el servidor backend confirme que la información se guardó exitosamente en PostgreSQL, evitando así la duplicidad de datos. \\
+\hline
+\end{longtable}

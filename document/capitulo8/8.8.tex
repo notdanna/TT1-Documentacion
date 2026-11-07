@@ -1,0 +1,957 @@
+\newpage
+\subsection{Especificación de casos de uso}
+\subsubsection{Casos de uso generales}
+\textbf{CU-G01 Iniciar sesión}
+%---------------------------------------
+% TABLA: CU-G01 Iniciar sesión
+%---------------------------------------
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\rowcolor{black}
+\multicolumn{2}{|l|}{\color{white} \textbf{Caso de uso:} CU-G01 Iniciar sesión} \\ \hline
+
+\multicolumn{2}{|c|}{\textit{\textcolor{gray}{Resumen de atributos}}} \\ \hline
+
+\textbf{Actor:} & \textit{Experto de campo, Administrador} \\ \hline
+
+\textbf{Propósito:} & Permitir el acceso al sistema mediante credenciales válidas, de acuerdo con el rol del usuario y la plataforma utilizada. \\ \hline
+
+\textbf{Entradas} & 
+\begin{itemize}
+    \item Correo electrónico
+    \item Contraseña
+\end{itemize} \\ \hline
+
+\textbf{Salidas} & 
+Se muestra la pantalla principal correspondiente al rol y plataforma del usuario. \\ \hline
+
+\textbf{Precondiciones} & 
+\begin{itemize}
+    \item Debe existir una cuenta registrada en el sistema.
+    \item La cuenta debe encontrarse activa.
+    \item En la aplicación móvil, el dispositivo debe estar asociado a la cuenta del Experto de campo.
+\end{itemize} \\ \hline
+
+\textbf{Postcondiciones} & 
+El usuario accede al sistema con los permisos correspondientes a su rol. \\ \hline
+
+\textbf{Errores} & 
+\begin{itemize}
+    \item MSG1: Dato requerido faltante.
+    \item MSG2: Correo electrónico no registrado.
+    \item MSG3: Contraseña incorrecta.
+    \item MSG4: Cuenta desactivada.
+    \item MSG5: Dispositivo no autorizado para esta cuenta.
+\end{itemize} \\ \hline
+
+\textbf{Tipo} & Primario \\ \hline
+
+\textbf{Fuente} & Requerimientos funcionales del sistema \\ \hline
+
+\textbf{Observaciones} & 
+El Experto de campo puede iniciar sesión desde la aplicación móvil o desde la plataforma web. El Administrador accede únicamente desde la plataforma web. \\ \hline
+
+\end{tabular}
+\caption{Resumen de atributos del caso de uso: Iniciar sesión.}
+\label{tab:cuG01IniciarSesion}
+\end{table}
+
+%---------------------------------------
+% SECCIÓN: Trayectorias CU-G01
+%---------------------------------------
+
+{\large {\textbf{Trayectorias del caso de uso}}}
+
+\vspace{0.5em}
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Principal}}}
+
+\begin{enumerate}
+    \item El \textbf{Usuario} abre la aplicación móvil o la plataforma web.
+    \item El \textbf{Sistema} muestra la pantalla de inicio de sesión.
+    \item El \textbf{Usuario} ingresa su correo electrónico.
+    \item El \textbf{Usuario} ingresa su contraseña.
+    \item El \textbf{Usuario} pulsa el botón \textbf{[Iniciar sesión]}.
+    \item El \textbf{Sistema} valida que los campos obligatorios no estén vacíos.  
+    Si algún campo obligatorio está vacío, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa A}}.
+    \item El \textbf{Sistema} verifica que el correo electrónico exista.  
+    Si el correo no existe, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa B}}.
+    \item El \textbf{Sistema} verifica que la contraseña ingresada sea correcta.  
+    Si la contraseña es incorrecta, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa C}}.
+    \item El \textbf{Sistema} verifica que la cuenta se encuentre activa.  
+    Si la cuenta está desactivada, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa D}}.
+    \item Si el acceso se realiza desde la aplicación móvil, el \textbf{Sistema} verifica que el dispositivo esté asociado a la cuenta del Experto de campo.  
+    Si el dispositivo no está autorizado, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa E}}.
+    \item El \textbf{Sistema} identifica el rol del usuario.
+    \item El \textbf{Sistema} muestra la pantalla correspondiente:
+    \begin{itemize}
+        \item Dashboard móvil, si el Experto de campo accede desde la aplicación móvil.
+        \item Dashboard web, si el Experto de campo accede desde la plataforma web.
+        \item Módulo de administración, si el Administrador accede desde la plataforma web.
+    \end{itemize}
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa A
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa A (Campos obligatorios vacíos)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG1}: ``Dato requerido faltante.''
+    \item El \textbf{Sistema} permite al \textbf{Usuario} ingresar los datos faltantes.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa B
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa B (Correo no registrado)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG2}: ``El correo electrónico no está registrado.''
+    \item El \textbf{Sistema} permite al \textbf{Usuario} ingresar otro correo electrónico.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa C
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa C (Contraseña incorrecta)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG3}: ``Contraseña incorrecta.''
+    \item El \textbf{Sistema} permite al \textbf{Usuario} ingresar nuevamente la contraseña.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa D
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa D (Cuenta desactivada)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG4}: ``La cuenta se encuentra desactivada.''
+    \item El \textbf{Sistema} impide el acceso al sistema.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa E
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa E (Dispositivo no autorizado)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG5}: ``El dispositivo no está autorizado para esta cuenta.''
+    \item El \textbf{Sistema} impide el acceso desde el dispositivo móvil.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\textbf{CU-G02 Recuperar contraseña}
+%---------------------------------------
+% TABLA: CU-G02 Recuperar contraseña
+%---------------------------------------
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\rowcolor{black}
+\multicolumn{2}{|l|}{\color{white} \textbf{Caso de uso:} CU-G02 Recuperar contraseña} \\ \hline
+
+\multicolumn{2}{|c|}{\textit{\textcolor{gray}{Resumen de atributos}}} \\ \hline
+
+\textbf{Actor:} & \textit{Experto de campo, Administrador} \\ \hline
+
+\textbf{Propósito:} & Permitir al usuario solicitar un mecanismo de recuperación de acceso cuando no recuerda su contraseña. \\ \hline
+
+\textbf{Entradas} & 
+\begin{itemize}
+    \item Correo electrónico asociado a la cuenta
+\end{itemize} \\ \hline
+
+\textbf{Salidas} & 
+El sistema envía un enlace o código de recuperación al correo electrónico registrado. \\ \hline
+
+\textbf{Precondiciones} & 
+\begin{itemize}
+    \item Debe existir una cuenta registrada con el correo electrónico ingresado.
+    \item La cuenta debe estar activa.
+    \item El usuario debe tener acceso al correo electrónico asociado.
+\end{itemize} \\ \hline
+
+\textbf{Postcondiciones} & 
+Se genera una solicitud de recuperación y el usuario puede continuar con el restablecimiento de contraseña. \\ \hline
+
+\textbf{Errores} & 
+\begin{itemize}
+    \item MSG1: Dato requerido faltante.
+    \item MSG2: Correo electrónico no registrado.
+    \item MSG4: Cuenta desactivada.
+    \item MSG6: No fue posible enviar el correo de recuperación.
+\end{itemize} \\ \hline
+
+\textbf{Tipo} & Secundario \\ \hline
+
+\textbf{Fuente} & Requerimientos funcionales del sistema \\ \hline
+
+\textbf{Observaciones} & 
+Este caso de uso extiende al inicio de sesión cuando el usuario no recuerda su contraseña. El restablecimiento de contraseña se realiza mediante el enlace o código enviado al correo electrónico. \\ \hline
+
+\end{tabular}
+\caption{Resumen de atributos del caso de uso: Recuperar contraseña.}
+\label{tab:cuG02RecuperarContrasena}
+\end{table}
+
+%---------------------------------------
+% SECCIÓN: Trayectorias CU-G02
+%---------------------------------------
+
+{\large {\textbf{Trayectorias del caso de uso}}}
+
+\vspace{0.5em}
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Principal}}}
+
+\begin{enumerate}
+    \item El \textbf{Usuario} se encuentra en la pantalla de inicio de sesión.
+    \item El \textbf{Usuario} selecciona la opción \textbf{[Recuperar contraseña]}.
+    \item El \textbf{Sistema} muestra la pantalla de recuperación de contraseña.
+    \item El \textbf{Usuario} ingresa el correo electrónico asociado a su cuenta.
+    \item El \textbf{Usuario} pulsa el botón \textbf{[Enviar]}.
+    \item El \textbf{Sistema} valida que el campo de correo electrónico no esté vacío.
+    Si el campo está vacío, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa A}}.
+    \item El \textbf{Sistema} verifica que el correo electrónico esté asociado a una cuenta registrada.
+    Si el correo no existe, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa B}}.
+    \item El \textbf{Sistema} verifica que la cuenta se encuentre activa.
+    Si la cuenta está desactivada, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa C}}.
+    \item El \textbf{Sistema} genera un enlace o código de recuperación.
+    \item El \textbf{Sistema} envía el enlace o código al correo electrónico registrado.
+    Si el correo no puede enviarse, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa D}}.
+    \item El \textbf{Sistema} muestra un mensaje indicando que se envió la información de recuperación.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa A
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa A (Correo no ingresado)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG1}: ``Dato requerido faltante.''
+    \item El \textbf{Sistema} permite al \textbf{Usuario} ingresar el correo electrónico.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa B
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa B (Correo no registrado)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG2}: ``El correo electrónico no está registrado.''
+    \item El \textbf{Sistema} permite al \textbf{Usuario} ingresar otro correo electrónico.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa C
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa C (Cuenta desactivada)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG4}: ``La cuenta se encuentra desactivada.''
+    \item El \textbf{Sistema} impide continuar con el proceso de recuperación.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa D
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa D (Error al enviar correo)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG6}: ``No fue posible enviar el correo de recuperación.''
+    \item El \textbf{Sistema} permite al \textbf{Usuario} intentar nuevamente el envío.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+
+\textbf{CU-G03 Restablecer contraseña}
+%---------------------------------------
+% TABLA: CU-G03 Restablecer contraseña
+%---------------------------------------
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\rowcolor{black}
+\multicolumn{2}{|l|}{\color{white} \textbf{Caso de uso:} CU-G03 Restablecer contraseña} \\ \hline
+
+\multicolumn{2}{|c|}{\textit{\textcolor{gray}{Resumen de atributos}}} \\ \hline
+
+\textbf{Actor:} & \textit{Experto de campo, Administrador} \\ \hline
+
+\textbf{Propósito:} & Permitir al usuario definir una nueva contraseña después de haber solicitado la recuperación de acceso. \\ \hline
+
+\textbf{Entradas} & 
+\begin{itemize}
+    \item Enlace o código de recuperación
+    \item Nueva contraseña
+    \item Confirmación de nueva contraseña
+\end{itemize} \\ \hline
+
+\textbf{Salidas} & 
+La contraseña de la cuenta se actualiza correctamente y el usuario puede iniciar sesión con la nueva contraseña. \\ \hline
+
+\textbf{Precondiciones} & 
+\begin{itemize}
+    \item El usuario debe haber solicitado la recuperación de contraseña.
+    \item El enlace o código de recuperación debe ser válido.
+    \item El enlace o código de recuperación no debe estar expirado.
+\end{itemize} \\ \hline
+
+\textbf{Postcondiciones} & 
+La cuenta queda asociada a la nueva contraseña definida por el usuario. \\ \hline
+
+\textbf{Errores} & 
+\begin{itemize}
+    \item MSG1: Dato requerido faltante.
+    \item MSG7: Enlace o código de recuperación inválido.
+    \item MSG8: Enlace o código de recuperación expirado.
+    \item MSG9: Las contraseñas no coinciden.
+    \item MSG10: La contraseña no cumple con los requisitos de seguridad.
+\end{itemize} \\ \hline
+
+\textbf{Tipo} & Secundario \\ \hline
+
+\textbf{Fuente} & Requerimientos funcionales del sistema \\ \hline
+
+\textbf{Observaciones} & 
+Este caso de uso forma parte del proceso de recuperación de contraseña. Requiere que el usuario haya recibido previamente un enlace o código de recuperación en su correo electrónico. \\ \hline
+
+\end{tabular}
+\caption{Resumen de atributos del caso de uso: Restablecer contraseña.}
+\label{tab:cuG03RestablecerContrasena}
+\end{table}
+
+%---------------------------------------
+% SECCIÓN: Trayectorias CU-G03
+%---------------------------------------
+
+{\large {\textbf{Trayectorias del caso de uso}}}
+
+\vspace{0.5em}
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Principal}}}
+
+\begin{enumerate}
+    \item El \textbf{Usuario} abre el enlace de recuperación recibido por correo electrónico o ingresa el código de recuperación correspondiente.
+    \item El \textbf{Sistema} valida que el enlace o código de recuperación sea válido.
+    Si el enlace o código es inválido, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa A}}.
+    \item El \textbf{Sistema} valida que el enlace o código de recuperación no haya expirado.
+    Si el enlace o código expiró, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa B}}.
+    \item El \textbf{Sistema} muestra la pantalla para restablecer contraseña.
+    \item El \textbf{Usuario} ingresa la nueva contraseña.
+    \item El \textbf{Usuario} confirma la nueva contraseña.
+    \item El \textbf{Usuario} pulsa el botón \textbf{[Restablecer contraseña]}.
+    \item El \textbf{Sistema} valida que los campos obligatorios no estén vacíos.
+    Si algún campo obligatorio está vacío, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa C}}.
+    \item El \textbf{Sistema} verifica que la nueva contraseña y la confirmación coincidan.
+    Si las contraseñas no coinciden, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa D}}.
+    \item El \textbf{Sistema} valida que la nueva contraseña cumpla con los requisitos de seguridad definidos.
+    Si la contraseña no cumple con los requisitos, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa E}}.
+    \item El \textbf{Sistema} actualiza la contraseña de la cuenta.
+    \item El \textbf{Sistema} invalida el enlace o código de recuperación utilizado.
+    \item El \textbf{Sistema} muestra un mensaje indicando que la contraseña fue restablecida correctamente.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa A
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa A (Enlace o código inválido)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG7}: ``El enlace o código de recuperación no es válido.''
+    \item El \textbf{Sistema} impide continuar con el restablecimiento de contraseña.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa B
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa B (Enlace o código expirado)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG8}: ``El enlace o código de recuperación ha expirado.''
+    \item El \textbf{Sistema} solicita al \textbf{Usuario} iniciar nuevamente el proceso de recuperación de contraseña.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa C
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa C (Campos obligatorios vacíos)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG1}: ``Dato requerido faltante.''
+    \item El \textbf{Sistema} permite al \textbf{Usuario} ingresar los datos faltantes.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa D
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa D (Contraseñas no coinciden)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG9}: ``Las contraseñas no coinciden.''
+    \item El \textbf{Sistema} permite al \textbf{Usuario} ingresar nuevamente la contraseña y su confirmación.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa E
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa E (Contraseña insegura)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG10}: ``La contraseña no cumple con los requisitos de seguridad.''
+    \item El \textbf{Sistema} permite al \textbf{Usuario} ingresar una nueva contraseña.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+
+\textbf{CU-G04 Cerrar sesión} 
+%---------------------------------------
+% TABLA: CU-G04 Cerrar sesión
+%---------------------------------------
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\rowcolor{black}
+\multicolumn{2}{|l|}{\color{white} \textbf{Caso de uso:} CU-G04 Cerrar sesión} \\ \hline
+
+\multicolumn{2}{|c|}{\textit{\textcolor{gray}{Resumen de atributos}}} \\ \hline
+
+\textbf{Actor:} & \textit{Experto de campo, Administrador} \\ \hline
+
+\textbf{Propósito:} & Permitir al usuario finalizar de forma segura su sesión activa en la aplicación móvil o plataforma web. \\ \hline
+
+\textbf{Entradas} & 
+\begin{itemize}
+    \item Solicitud de cierre de sesión
+\end{itemize} \\ \hline
+
+\textbf{Salidas} & 
+El sistema finaliza la sesión activa y muestra la pantalla de inicio de sesión. \\ \hline
+
+\textbf{Precondiciones} & 
+\begin{itemize}
+    \item El usuario debe haber iniciado sesión previamente.
+    \item Debe existir una sesión activa.
+\end{itemize} \\ \hline
+
+\textbf{Postcondiciones} & 
+La sesión del usuario queda finalizada y no se permite el acceso a funciones protegidas sin iniciar sesión nuevamente. \\ \hline
+
+\textbf{Errores} & 
+\begin{itemize}
+    \item MSG11: No existe una sesión activa.
+    \item MSG12: No fue posible cerrar la sesión correctamente.
+\end{itemize} \\ \hline
+
+\textbf{Tipo} & Secundario \\ \hline
+
+\textbf{Fuente} & Requerimientos funcionales del sistema \\ \hline
+
+\textbf{Observaciones} & 
+El cierre de sesión puede ejecutarse desde la configuración de la aplicación móvil o desde el perfil de usuario en la plataforma web. \\ \hline
+
+\end{tabular}
+\caption{Resumen de atributos del caso de uso: Cerrar sesión.}
+\label{tab:cuG04CerrarSesion}
+\end{table}
+
+%---------------------------------------
+% SECCIÓN: Trayectorias CU-G04
+%---------------------------------------
+
+{\large {\textbf{Trayectorias del caso de uso}}}
+
+\vspace{0.5em}
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Principal}}}
+
+\begin{enumerate}
+    \item El \textbf{Usuario} se encuentra dentro de una sesión activa en la aplicación móvil o plataforma web.
+    \item El \textbf{Usuario} accede a la sección donde se encuentra la opción de cierre de sesión.
+    \item El \textbf{Usuario} selecciona la opción \textbf{[Cerrar sesión]}.
+    \item El \textbf{Sistema} solicita confirmación para cerrar la sesión.
+    \item El \textbf{Usuario} confirma la acción.
+    \item El \textbf{Sistema} valida que exista una sesión activa. 
+    Si no existe una sesión activa, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa A}}.
+    \item El \textbf{Sistema} finaliza la sesión del usuario.
+    Si no es posible finalizar la sesión, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa B}}.
+    \item El \textbf{Sistema} redirige al usuario a la pantalla de inicio de sesión.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa A
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa A (Sesión no activa)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG11}: ``No existe una sesión activa.''
+    \item El \textbf{Sistema} redirige al usuario a la pantalla de inicio de sesión.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa B
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa B (Error al cerrar sesión)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG12}: ``No fue posible cerrar la sesión correctamente.''
+    \item El \textbf{Sistema} permite al usuario intentar nuevamente el cierre de sesión.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+%---------------------------------------
+% Trayectoria Alternativa C
+%---------------------------------------
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa C (Cancelar cierre de sesión)}}}
+\begin{enumerate}
+    \item El \textbf{Usuario} cancela la confirmación de cierre de sesión.
+    \item El \textbf{Sistema} mantiene la sesión activa.
+    \item El \textbf{Sistema} regresa al usuario a la pantalla anterior.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\newpage
+\subsubsection{CU-M00: Operación general de la aplicación móvil}
+
+Con el fin de evitar una especificación repetitiva y excesivamente extensa, los casos de uso derivados del dashboard móvil se agrupan en el caso de uso general \textbf{CU-M00: Operación general de la aplicación móvil}. Esta decisión se debe a que el dashboard funciona como el punto central de navegación de la app, desde el cual el Experto de campo accede a las funciones principales del sistema: captura y análisis de árboles, consulta del historial local, mapa local, notificaciones, perfil y configuración.
+
+Los casos de uso específicos de cada módulo se representan en los diagramas correspondientes; sin embargo, para la especificación textual se documentan de forma integrada dentro de CU-M00, ya que comparten condiciones generales de operación, como el inicio de sesión, el uso de la base local SQLite, la operación offline-first y la sincronización ascendente hacia la nube.
+
+%---------------------------------------
+% TABLA: CU-M00 Operar aplicación móvil desde el dashboard
+%---------------------------------------
+\renewcommand{\arraystretch}{1.2}
+
+\begin{longtable}{|p{3.3cm}|p{10cm}|}
+\caption{Resumen de atributos del caso de uso: Operar aplicación móvil desde el dashboard.}
+\label{tab:cuM00DashboardMovil} \\
+
+\hline
+\rowcolor{black}
+\multicolumn{2}{|l|}{\color{white} \textbf{Caso de uso:} CU-M00 Operar aplicación móvil desde el dashboard} \\ \hline
+
+\multicolumn{2}{|c|}{\textit{\textcolor{gray}{Resumen de atributos}}} \\ \hline
+\endfirsthead
+
+\hline
+\rowcolor{black}
+\multicolumn{2}{|l|}{\color{white} \textbf{Caso de uso:} CU-M00 Operar aplicación móvil desde el dashboard (continuación)} \\ \hline
+
+\multicolumn{2}{|c|}{\textit{\textcolor{gray}{Resumen de atributos}}} \\ \hline
+\endhead
+
+\hline
+\endfoot
+
+\hline
+\endlastfoot
+
+\textbf{Actor:} & \textit{Experto de campo} \\ \hline
+
+\textbf{Propósito:} & Permitir al Experto de campo acceder desde el dashboard móvil a las funciones principales de captura, análisis, consulta local, mapa, notificaciones, perfil y configuración de la aplicación. \\ \hline
+
+\textbf{Entradas} & 
+\begin{itemize}
+    \item Solicitud de acceso a una función del dashboard móvil.
+    \item Datos capturados o seleccionados por el usuario según la función utilizada.
+\end{itemize} \\ \hline
+
+\textbf{Salidas} & 
+El sistema muestra la información solicitada o ejecuta la función seleccionada, utilizando la base local SQLite del dispositivo cuando corresponda. \\ \hline
+
+\textbf{Precondiciones} & 
+\begin{itemize}
+    \item El Experto de campo debe haber iniciado sesión.
+    \item El dispositivo debe estar asociado a la cuenta del Experto de campo.
+    \item La base local SQLite debe estar disponible en el dispositivo.
+\end{itemize} \\ \hline
+
+\textbf{Postcondiciones} & 
+\begin{itemize}
+    \item El usuario accede a la función seleccionada desde el dashboard.
+    \item Si se genera un análisis, este se almacena localmente y queda pendiente de sincronización.
+    \item Si existe conexión a internet, los registros locales pueden sincronizarse de forma ascendente hacia la nube.
+\end{itemize} \\ \hline
+
+\textbf{Funciones incluidas} &
+\begin{itemize}
+    \item CU-M05: Consultar resumen de árboles por jornada.
+    \item CU-M06: Iniciar nuevo análisis.
+    \item CU-M07: Consultar registros recientes de la jornada según estado sanitario.
+    \item CU-M08: Consultar historial local de análisis de la jornada.
+    \item CU-M09: Consultar mapa local de árboles.
+    \item CU-M10: Consultar notificaciones.
+    \item CU-M11: Consultar perfil de usuario.
+    \item CU-M12: Gestionar configuración de la aplicación.
+\end{itemize} \\ \hline
+
+\textbf{Errores} & 
+\begin{itemize}
+    \item MSG13: No existen registros para la jornada actual.
+    \item MSG14: No fue posible cargar la información local.
+    \item MSG17: No fue posible acceder a la cámara.
+    \item MSG18: No fue posible importar la imagen seleccionada.
+    \item MSG19: Imagen no válida para el análisis.
+    \item MSG21: No fue posible guardar el análisis en la base local.
+    \item MSG25: No fue posible sincronizar el registro.
+\end{itemize} \\ \hline
+
+\textbf{Tipo} & Primario para el Experto de campo \\ \hline
+
+\textbf{Fuente} & Requerimientos funcionales del sistema \\ \hline
+
+\textbf{Observaciones} & 
+La aplicación móvil opera bajo un enfoque \textit{offline-first}. Cada dispositivo cuenta con una base local SQLite independiente. La sincronización de registros se realiza únicamente de forma ascendente, desde el dispositivo móvil hacia la nube. \\ \hline
+
+\end{longtable}
+
+{\large {\textbf{Trayectorias del caso de uso}}}
+
+\vspace{0.5em}
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Principal}}}
+
+\begin{enumerate}
+    \item El \textbf{Experto de campo} inicia sesión en la aplicación móvil.
+    \item El \textbf{Sistema} muestra el dashboard móvil.
+    \item El \textbf{Sistema} consulta la base local SQLite del dispositivo para mostrar el resumen de la jornada y los registros recientes.
+    \item El \textbf{Experto de campo} selecciona una función disponible en el dashboard.
+    \item El \textbf{Sistema} muestra el módulo correspondiente:
+    \begin{itemize}
+        \item Captura y análisis móvil.
+        \item Historial local de análisis.
+        \item Mapa local de árboles.
+        \item Notificaciones y alertas.
+        \item Perfil de usuario.
+        \item Configuración de la aplicación.
+    \end{itemize}
+    \item El \textbf{Experto de campo} realiza la acción correspondiente dentro del módulo seleccionado.
+    \item El \textbf{Sistema} guarda, consulta o actualiza la información local según la acción realizada.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa A (Sin registros locales)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} no encuentra registros para la jornada actual.
+    \item El \textbf{Sistema} muestra el resumen con valores en cero y sin tarjetas recientes.
+    \item El \textbf{Sistema} mantiene disponibles las funciones principales del dashboard.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa B (Error al consultar información local)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} no puede consultar la base local SQLite.
+    \item El \textbf{Sistema} muestra el mensaje correspondiente indicando que no fue posible cargar la información local.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa C (Error de sincronización)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} intenta sincronizar un registro local hacia la nube.
+    \item El \textbf{Sistema} no logra completar la sincronización.
+    \item El \textbf{Sistema} marca el registro con estado de error de sincronización.
+    \item El \textbf{Experto de campo} puede reintentar manualmente la sincronización desde el historial local.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\newpage
+\subsubsection{        CU-W00: Consulta general de la plataforma web}
+
+El caso de uso \textbf{CU-W00: Consulta general de la plataforma web} agrupa las funcionalidades principales disponibles para el Experto de campo desde el dashboard web. Esta agrupación se realiza porque la plataforma web funciona como un entorno de consulta y supervisión de la información consolidada en la nube, proveniente de los registros sincronizados desde los dispositivos móviles asociados a la cuenta.
+
+Aunque los diagramas muestran módulos específicos como historial general, mapa general, estadísticas y perfil de usuario, su especificación textual se concentra en CU-W00 para evitar duplicidad de información. Estos módulos comparten el mismo contexto de operación: el usuario debe haber iniciado sesión en la plataforma web, la información consultada proviene de la base central en la nube y las acciones realizadas son de consulta, filtrado o visualización.
+
+La plataforma web no contempla la edición de registros operativos capturados desde la aplicación móvil, debido a que el sistema utiliza una sincronización ascendente, es decir, desde la base local del dispositivo móvil hacia la nube. Por ello, CU-W00 describe de manera compacta el comportamiento general de consulta web, mientras que los diagramas detallan visualmente las funciones derivadas disponibles en cada módulo.
+
+%---------------------------------------
+% TABLA: CU-W00 Consultar información consolidada desde el dashboard web
+%---------------------------------------
+\renewcommand{\arraystretch}{1.2}
+
+\begin{longtable}{|p{3.3cm}|p{10cm}|}
+\caption{Resumen de atributos del caso de uso: Consultar información consolidada desde el dashboard web.}
+\label{tab:cuW00DashboardWeb} \\
+
+\hline
+\rowcolor{black}
+\multicolumn{2}{|l|}{\color{white} \textbf{Caso de uso:} CU-W00 Consultar información consolidada desde el dashboard web} \\ \hline
+
+\multicolumn{2}{|c|}{\textit{\textcolor{gray}{Resumen de atributos}}} \\ \hline
+\endfirsthead
+
+\hline
+\rowcolor{black}
+\multicolumn{2}{|l|}{\color{white} \textbf{Caso de uso:} CU-W00 Consultar información consolidada desde el dashboard web (continuación)} \\ \hline
+
+\multicolumn{2}{|c|}{\textit{\textcolor{gray}{Resumen de atributos}}} \\ \hline
+\endhead
+
+\hline
+\endfoot
+
+\hline
+\endlastfoot
+
+\textbf{Actor:} & \textit{Experto de campo} \\ \hline
+
+\textbf{Propósito:} & Permitir al Experto de campo consultar desde la plataforma web la información consolidada en la nube, proveniente de los dispositivos móviles asociados a su cuenta. \\ \hline
+
+\textbf{Entradas} & 
+\begin{itemize}
+    \item Solicitud de consulta desde el dashboard web.
+    \item Criterios de filtro, cuando el usuario los aplique.
+\end{itemize} \\ \hline
+
+\textbf{Salidas} & 
+El sistema muestra información consolidada sobre registros, árboles, mapas, estadísticas e historial de análisis sincronizados en la nube. \\ \hline
+
+\textbf{Precondiciones} & 
+\begin{itemize}
+    \item El Experto de campo debe haber iniciado sesión en la plataforma web.
+    \item Deben existir registros sincronizados en la nube para mostrar información consolidada.
+\end{itemize} \\ \hline
+
+\textbf{Postcondiciones} & 
+El usuario visualiza la información consolidada solicitada sin modificar los registros operativos almacenados en la nube. \\ \hline
+
+\textbf{Funciones incluidas} &
+\begin{itemize}
+    \item CU-W05: Consultar resumen general.
+    \item CU-W06: Consultar historial general de registros.
+    \item CU-W07: Consultar mapa general de árboles.
+    \item CU-W08: Consultar estadísticas de registros.
+    \item CU-W09: Consultar perfil de usuario.
+\end{itemize} \\ \hline
+
+\textbf{Errores} & 
+\begin{itemize}
+    \item MSG26: No existen registros sincronizados disponibles.
+    \item MSG27: No fue posible cargar la información consolidada.
+    \item MSG28: No fue posible aplicar los filtros seleccionados.
+\end{itemize} \\ \hline
+
+\textbf{Tipo} & Primario para el Experto de campo \\ \hline
+
+\textbf{Fuente} & Requerimientos funcionales del sistema \\ \hline
+
+\textbf{Observaciones} & 
+La plataforma web funciona como una vista de consulta y supervisión. No se contemplan acciones de edición sobre los registros operativos capturados desde la aplicación móvil, debido a que la sincronización definida es ascendente. \\ \hline
+
+\end{longtable}
+
+{\large {\textbf{Trayectorias del caso de uso}}}
+
+\vspace{0.5em}
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Principal}}}
+
+\begin{enumerate}
+    \item El \textbf{Experto de campo} inicia sesión en la plataforma web.
+    \item El \textbf{Sistema} muestra el dashboard web.
+    \item El \textbf{Sistema} consulta la base de datos en la nube.
+    \item El \textbf{Sistema} muestra el resumen general de registros sincronizados.
+    \item El \textbf{Experto de campo} selecciona una función disponible en el dashboard web.
+    \item El \textbf{Sistema} muestra el módulo correspondiente:
+    \begin{itemize}
+        \item Historial general de registros.
+        \item Mapa general de árboles.
+        \item Estadísticas de registros.
+        \item Perfil de usuario.
+    \end{itemize}
+    \item El \textbf{Experto de campo} aplica filtros o consulta detalles, si lo requiere.
+    \item El \textbf{Sistema} muestra la información consolidada solicitada.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa A (Sin registros sincronizados)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} no encuentra registros sincronizados asociados a la cuenta.
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG26}: ``No existen registros sincronizados disponibles.''
+    \item El \textbf{Sistema} muestra el dashboard web sin información consolidada.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa B (Error al cargar información consolidada)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} no puede consultar la base de datos en la nube.
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG27}: ``No fue posible cargar la información consolidada.''
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa C (Error al aplicar filtros)}}}
+\begin{enumerate}
+    \item El \textbf{Experto de campo} aplica filtros sobre la información consultada.
+    \item El \textbf{Sistema} no puede procesar los filtros seleccionados.
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG28}: ``No fue posible aplicar los filtros seleccionados.''
+    \item El \textbf{Sistema} conserva la vista anterior.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\newpage
+\subsubsection{CU-A00: Gestionar cuentas y dispositivos desde la plataforma web}
+
+El caso de uso \textbf{CU-A00: Gestionar cuentas y dispositivos desde la plataforma web} agrupa las funciones administrativas disponibles para el Administrador. Esta agrupación se realiza porque las acciones de crear, editar, desactivar cuentas, asignar roles y administrar dispositivos asociados forman parte de un mismo proceso general de gestión de usuarios dentro de la plataforma web.
+
+Aunque en el diagrama se muestran casos de uso específicos para cada acción administrativa, su especificación textual se concentra en CU-A00 para evitar repetir condiciones comunes, como el inicio de sesión del Administrador, la validación de permisos y el almacenamiento de cambios en la base central en la nube.
+
+Las acciones incluidas en CU-A00 no modifican los registros operativos capturados desde la aplicación móvil. Es decir, el Administrador gestiona información de acceso, roles y dispositivos autorizados, pero no altera los análisis, evidencias, ubicaciones o registros generados por los expertos de campo. Esta separación permite mantener la sincronización ascendente del sistema, donde los datos operativos se envían desde la aplicación móvil hacia la nube, sin requerir sincronización descendente hacia las bases locales SQLite de los dispositivos.
+%---------------------------------------
+% TABLA: CU-A00 Gestionar cuentas y dispositivos desde la plataforma web
+%---------------------------------------
+\renewcommand{\arraystretch}{1.2}
+
+\begin{longtable}{|p{3.3cm}|p{10cm}|}
+\caption{Resumen de atributos del caso de uso: Gestionar cuentas y dispositivos desde la plataforma web.}
+\label{tab:cuA00AdministracionWeb} \\
+
+\hline
+\rowcolor{black}
+\multicolumn{2}{|l|}{\color{white} \textbf{Caso de uso:} CU-A00 Gestionar cuentas y dispositivos desde la plataforma web} \\ \hline
+
+\multicolumn{2}{|c|}{\textit{\textcolor{gray}{Resumen de atributos}}} \\ \hline
+\endfirsthead
+
+\hline
+\rowcolor{black}
+\multicolumn{2}{|l|}{\color{white} \textbf{Caso de uso:} CU-A00 Gestionar cuentas y dispositivos desde la plataforma web (continuación)} \\ \hline
+
+\multicolumn{2}{|c|}{\textit{\textcolor{gray}{Resumen de atributos}}} \\ \hline
+\endhead
+
+\hline
+\endfoot
+
+\hline
+\endlastfoot
+
+\textbf{Actor:} & \textit{Administrador} \\ \hline
+
+\textbf{Propósito:} & Permitir al Administrador gestionar las cuentas de usuario, roles y dispositivos móviles asociados a cada cuenta desde la plataforma web. \\ \hline
+
+\textbf{Entradas} & 
+\begin{itemize}
+    \item Solicitud de gestión administrativa.
+    \item Datos de cuenta de usuario.
+    \item Rol asignado al usuario.
+    \item Identificador o información del dispositivo móvil.
+\end{itemize} \\ \hline
+
+\textbf{Salidas} & 
+El sistema crea, actualiza, desactiva o consulta cuentas de usuario y dispositivos asociados, según la acción realizada por el Administrador. \\ \hline
+
+\textbf{Precondiciones} & 
+\begin{itemize}
+    \item El Administrador debe haber iniciado sesión en la plataforma web.
+    \item La cuenta del Administrador debe estar activa.
+    \item El Administrador debe contar con permisos de administración.
+\end{itemize} \\ \hline
+
+\textbf{Postcondiciones} & 
+\begin{itemize}
+    \item La cuenta de usuario queda creada, modificada, desactivada o con rol asignado, según corresponda.
+    \item Los dispositivos móviles quedan asociados o desasociados de la cuenta seleccionada.
+    \item Los cambios administrativos quedan almacenados en la base de datos central en la nube.
+\end{itemize} \\ \hline
+
+\textbf{Funciones incluidas} &
+\begin{itemize}
+    \item CU-A01: Gestionar cuentas de usuario.
+    \item CU-A02: Crear cuenta de usuario.
+    \item CU-A03: Editar cuenta de usuario.
+    \item CU-A04: Desactivar cuenta de usuario.
+    \item CU-A05: Asignar rol de usuario.
+    \item CU-A06: Gestionar dispositivos asociados.
+    \item CU-A07: Asociar dispositivo a cuenta.
+    \item CU-A08: Desasociar dispositivo de cuenta.
+    \item CU-A09: Consultar dispositivos asociados a una cuenta.
+\end{itemize} \\ \hline
+
+\textbf{Errores} & 
+\begin{itemize}
+    \item MSG29: No se cuenta con permisos de administración.
+    \item MSG30: No fue posible cargar la información de usuarios.
+    \item MSG31: El correo electrónico ya se encuentra registrado.
+    \item MSG32: No fue posible guardar los cambios de la cuenta.
+    \item MSG33: El dispositivo ya se encuentra asociado a una cuenta.
+    \item MSG34: No fue posible asociar el dispositivo.
+    \item MSG35: No fue posible desasociar el dispositivo.
+\end{itemize} \\ \hline
+
+\textbf{Tipo} & Primario para el Administrador \\ \hline
+
+\textbf{Fuente} & Requerimientos funcionales del sistema \\ \hline
+
+\textbf{Observaciones} & 
+Las funciones administrativas se realizan sobre la base central en la nube. Estas acciones no modifican los registros operativos capturados desde la aplicación móvil ni implican sincronización descendente hacia las bases locales SQLite de los dispositivos. \\ \hline
+
+\end{longtable}
+
+{\large {\textbf{Trayectorias del caso de uso}}}
+
+\vspace{0.5em}
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Principal}}}
+
+\begin{enumerate}
+    \item El \textbf{Administrador} inicia sesión en la plataforma web.
+    \item El \textbf{Sistema} valida que la cuenta tenga permisos de administración.
+    Si no cuenta con permisos, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa A}}.
+    \item El \textbf{Sistema} muestra el módulo de administración.
+    \item El \textbf{Administrador} selecciona la sección de gestión de cuentas de usuario.
+    \item El \textbf{Sistema} muestra la lista de cuentas registradas.
+    \item El \textbf{Administrador} selecciona una acción administrativa:
+    \begin{itemize}
+        \item Crear cuenta de usuario.
+        \item Editar cuenta de usuario.
+        \item Desactivar cuenta de usuario.
+        \item Asignar rol de usuario.
+        \item Gestionar dispositivos asociados.
+    \end{itemize}
+    \item El \textbf{Administrador} ingresa o modifica la información requerida según la acción seleccionada.
+    \item El \textbf{Sistema} valida la información ingresada.
+    Si la información no es válida, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa B}}.
+    \item El \textbf{Sistema} guarda los cambios en la base de datos central en la nube.
+    Si no es posible guardar los cambios, ir a la \textbf{\textcolor{blue}{Trayectoria Alternativa C}}.
+    \item El \textbf{Sistema} muestra una confirmación de la acción realizada.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa A (Sin permisos de administración)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG29}: ``No se cuenta con permisos de administración.''
+    \item El \textbf{Sistema} impide el acceso al módulo de administración.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa B (Información inválida)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} detecta datos incompletos, duplicados o no válidos.
+    \item El \textbf{Sistema} muestra el mensaje correspondiente según el error detectado.
+    \item El \textbf{Sistema} permite al \textbf{Administrador} corregir la información.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa C (Error al guardar cambios)}}}
+\begin{enumerate}
+    \item El \textbf{Sistema} no puede guardar los cambios en la base de datos central.
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG32}: ``No fue posible guardar los cambios de la cuenta.''
+    \item El \textbf{Sistema} permite al \textbf{Administrador} intentar nuevamente.
+    \item Fin del caso de uso.
+\end{enumerate}
+
+\paragraph{\textbf{\textcolor{blue}{Trayectoria Alternativa D (Dispositivo ya asociado)}}}
+\begin{enumerate}
+    \item El \textbf{Administrador} intenta asociar un dispositivo a una cuenta.
+    \item El \textbf{Sistema} detecta que el dispositivo ya se encuentra asociado a una cuenta.
+    \item El \textbf{Sistema} muestra el mensaje \textbf{MSG33}: ``El dispositivo ya se encuentra asociado a una cuenta.''
+    \item El \textbf{Sistema} cancela la asociación del dispositivo.
+    \item Fin del caso de uso.
+\end{enumerate}

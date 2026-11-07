@@ -1,0 +1,48 @@
+\newpage
+\subsubsection{Herramientas para la aplicación web}
+
+La aplicación web se desarrollará como una Single Page Application
+(SPA) orientada a la visualización y administración de los datos
+sincronizados desde los dispositivos móviles. El stack seleccionado
+prioriza la integración nativa entre herramientas, la mantenibilidad
+del código y la capacidad de representar datos geoespaciales y
+estadísticos de forma clara.
+
+\textbf{Angular} es el framework principal para el desarrollo del
+frontend. Desarrollado y mantenido por Google, Angular ofrece una
+arquitectura basada en componentes, inyección de dependencias nativa
+y un sistema de módulos que facilita la organización del código en
+aplicaciones de mediana y gran escala. Su integración con TypeScript
+garantiza tipado estático y detección temprana de errores durante
+el desarrollo.
+
+\textbf{Angular Material} es la biblioteca oficial de componentes
+de interfaz de usuario para Angular, basada en los principios de
+Material Design. Proveerá los componentes visuales del sistema como
+tablas, formularios, diálogos, navegación y tarjetas, asegurando
+una interfaz consistente, accesible y alineada con los estándares
+modernos de diseño.
+
+\textbf{D3.js} se utilizará para la visualización de datos estadísticos y geoespaciales del sistema. Su capacidad para construir visualizaciones personalizadas basadas en datos permitirá representar la distribución de focos de infestación, la evolución temporal del estado sanitario del arbolado y las estadísticas generales del sistema de forma interactiva y precisa.
+
+\textbf{MapLibre GL JS} es la biblioteca de código abierto utilizada
+para la visualización de mapas vectoriales en la aplicación web.
+Permite renderizar mapas interactivos directamente en el navegador
+y representar mediante pines georreferenciados las ubicaciones de
+los registros sincronizados desde los dispositivos móviles, facilitando la supervisión espacial del estado sanitario del arbolado desde la plataforma de administración.
+
+\textbf{HttpClient} es el módulo nativo de Angular para la gestión
+de peticiones HTTP. Se utilizará para consumir los endpoints REST
+expuestos por Amazon API Gateway, gestionando la comunicación entre
+el frontend y el backend de forma eficiente mediante observables y
+soporte para interceptores, los cuales permitirán adjuntar
+automáticamente el token de autenticación de Amazon Cognito en cada
+petición.
+
+\textbf{Amazon Cognito} gestionará la autenticación de los usuarios
+de la plataforma web, incluyendo los roles de Experto de campo y
+Administrador. Proveerá el flujo de inicio de sesión, recuperación
+de contraseña y gestión de tokens JWT, eliminando la necesidad de
+implementar estos mecanismos de forma manual en el backend.
+
+La seguridad en las comunicaciones entre el cliente web y los servicios en la nube se garantizará mediante \textbf{AWS Certificate Manager (ACM)}, el servicio de Amazon que provee y renueva automáticamente certificados SSL/TLS sin costo adicional. ACM se integrará con Amazon CloudFront y Amazon API Gateway para asegurar que toda la comunicación se realice a través de HTTPS, cumpliendo con el requerimiento no funcional RNF-05.

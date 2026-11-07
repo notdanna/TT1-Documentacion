@@ -1,0 +1,73 @@
+\newpage
+\subsubsection{Pruebas del sistema}
+
+Las pruebas del sistema verificarán que cada funcionalidad del sistema
+cumpla con los requerimientos funcionales definidos en la
+sección~\ref{subsec:rf}, evaluando el comportamiento del sistema desde
+la perspectiva del usuario final. Dado que el sistema se encuentra en
+fase de diseño, esta sección presenta el plan de pruebas funcionales
+que se ejecutará durante la fase de implementación del prototipo.
+
+\textbf{Herramientas utilizadas:}
+
+\begin{itemize}
+    \item \textbf{Espresso:} Framework oficial de Google para pruebas
+    de interfaz de usuario en Android. Se utilizará para verificar los
+    flujos de navegación, la captura de imágenes, la visualización de
+    resultados y el comportamiento offline de la aplicación móvil
+    desarrollada con Kotlin y Jetpack Compose.
+    \item \textbf{Postman + Newman:} Se utilizará para diseñar y
+    ejecutar colecciones de pruebas sobre los endpoints REST expuestos
+    por Amazon API Gateway. Newman permitirá automatizar la ejecución
+    de estas pruebas desde el pipeline de GitHub Actions.
+\end{itemize}
+
+La Tabla~\ref{tab:plan_pruebas_sistema} presenta los casos de prueba
+funcionales planificados para el sistema.
+
+\begin{longtable}{|>{\centering\arraybackslash}m{1.5cm}|>
+{\raggedright\arraybackslash}m{3.5cm}|>{\raggedright\arraybackslash}m{4cm}|>
+{\raggedright\arraybackslash}m{4cm}|}
+\caption{Plan de pruebas funcionales del sistema.}
+\label{tab:plan_pruebas_sistema} \\
+\hline
+\textbf{ID} & \textbf{Caso de prueba} & \textbf{Pasos} & \textbf{Resultado esperado} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{ID} & \textbf{Caso de prueba} & \textbf{Pasos} & \textbf{Resultado esperado} \\
+\hline
+\endhead
+
+PT-01 & Login exitoso (app móvil) & Ingresar email y contraseña válidos en la pantalla de login. & El sistema autentica al usuario y muestra la pantalla principal. \\
+\hline
+PT-02 & Login fallido (credenciales incorrectas) & Ingresar credenciales incorrectas. & El sistema muestra el mensaje MSG03 y no permite el acceso. \\
+\hline
+PT-03 & Captura de imagen desde cámara & Presionar "Nueva Captura" y tomar fotografía. & La imagen se captura, se procesa con TFLite y se muestra el resultado de clasificación. \\
+\hline
+PT-04 & Clasificación offline & Con conexión desactivada, capturar imagen de árbol. & El modelo TFLite genera resultado etiquetado como \textbf{Offline} sin requerir internet. \\
+\hline
+PT-05 & Guardado local en SQLite & Realizar captura sin conexión a internet. & El registro se guarda en SQLite con estado \textbf{Pendiente de sincronización}. \\
+\hline
+PT-06 & Sincronización automática & Activar conexión a internet con registros pendientes. & El sistema sincroniza automáticamente y actualiza el estado a \textbf{Sincronizado}. \\
+\hline
+PT-07 & Sincronización manual & Con registros en estado \textbf{Error de sincronización}, presionar botón de reintento. & El sistema reintenta la sincronización y actualiza el estado. \\
+\hline
+PT-08 & Alerta de proximidad a foco & Acercarse a coordenadas de un foco de infestación registrado. & El sistema emite notificación de proximidad sin requerir internet. \\
+\hline
+PT-09 & Resumen de jornada & Consultar el resumen de capturas del día. & Se muestran correctamente el total de capturas, árboles sanos e infestados del día en curso. \\
+\hline
+PT-10 & Login exitoso (plataforma web) & Ingresar credenciales válidas en la plataforma web. & Amazon Cognito emite token JWT y Angular redirige al dashboard. \\
+\hline
+PT-11 & Consulta de historial web & Acceder al historial completo de detecciones desde la plataforma web. & Se muestran todos los registros sincronizados sin restricción de tiempo. \\
+\hline
+PT-12 & Generación de reporte PDF & Seleccionar rango de fechas y generar reporte desde la plataforma web. & El sistema genera y permite descargar el reporte en formato PDF. \\
+\hline
+PT-13 & Visualización de mapa & Consultar el mapa general de árboles registrados. & Se muestran los marcadores en las coordenadas correctas con su estado sanitario. \\
+\hline
+PT-14 & Gestión de usuarios (administrador) & Crear cuenta de experto de campo desde la plataforma web. & La cuenta se crea correctamente y el usuario puede iniciar sesión. \\
+\hline
+PT-15 & Descarga de modelo TFLite & Conectar dispositivo a internet con versión de modelo desactualizada. & El sistema descarga la nueva versión del modelo desde Amazon S3. \\
+\hline
+\end{longtable}

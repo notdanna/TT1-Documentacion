@@ -1,0 +1,67 @@
+\newpage
+\subsection{Análisis de riesgos y restricciones}
+
+El desarrollo de un prototipo de detección de insectos descortezadores mediante visión por computadora implica riesgos en distintos niveles: desde la calidad y representatividad de los datos de entrenamiento, hasta las condiciones reales de operación en campo dentro del Bosque
+de Chapultepec. A continuación se identifican los principales riesgos técnicos y operativos, así como las restricciones inherentes a la naturaleza del prototipo.
+
+\subsubsection{Riesgos asociados al conjunto de datos}
+
+La calidad del modelo de clasificación depende directamente de la calidad y diversidad del dataset utilizado. Se identifican los siguientes riesgos:
+
+\begin{itemize}
+    \item \textbf{Sesgo de dominio.} Los datasets utilizados en la prueba preliminar (\textit{bark-complete} y \textit{bark\_infected}) provienen de condiciones de captura distintas a las del Bosque de Chapultepec: diferentes especies, ángulos de captura, condiciones de iluminación y etapas de infestación. Esto genera un sesgo de dominio
+    que limita la capacidad del modelo para generalizar a imágenes capturadas en campo.
+
+    \item \textbf{Desbalance entre etapas de infestación.} Las imágenes de corteza infestada pueden corresponder a distintas fases del proceso de colonización (galería inicial, salida
+    de adultos, daño avanzado). Si el dataset no cubre todas las etapas de forma balanceada, el modelo tenderá a detectar únicamente los casos más evidentes, fallando en infestaciones tempranas que son las más relevantes para la intervención oportuna.
+
+    \item \textbf{Variabilidad estacional y ambiental.} Las condiciones visuales de la corteza varían según la época del año, la humedad y la exposición solar. Un dataset capturado en una sola temporada puede no representar la apariencia de la corteza en otras condiciones, reduciendo la robustez del modelo en uso continuo.
+\end{itemize}
+
+\subsubsection{Riesgos técnicos de implementación}
+
+Más allá del modelo, la integración del sistema en un entorno móvil y su operación en campo introducen riesgos técnicos adicionales:
+
+\begin{itemize}
+    \item \textbf{Variabilidad en la captura de imágenes.} A diferencia de un dataset controlado, las imágenes capturadas por usuarios en campo presentan variaciones de distancia, ángulo, enfoque y exposición. El modelo puede degradar su rendimiento ante imágenes que no cumplan las condiciones mínimas de calidad, por lo que se requiere un módulo de validación de imagen previo a la inferencia.
+
+    \item \textbf{Rendimiento del modelo en dispositivos de gama baja.} El archivo \texttt{bark\_classifier.tflite} fue optimizado mediante cuantización float16 para reducir su tamaño y acelerar la inferencia en móvil. Sin embargo, en dispositivos con procesadores limitados o sin soporte de aceleración neuronal (NPU), los tiempos de inferencia pueden ser inaceptables para una experiencia de usuario fluida.
+
+    \item \textbf{Deriva del modelo en el tiempo.} Las poblaciones de insectos descortezadores evolucionan y los patrones de daño pueden cambiar con el tiempo o ante nuevas especies invasoras. Un modelo entrenado estáticamente puede perder precisión progresivamente si no se implementa un mecanismo de reentrenamiento periódico con datos actualizados.
+
+    \item \textbf{Integración con el backend y la plataforma web.} A nivel del sistema completo, la comunicación entre la aplicación móvil, el servidor de procesamiento y la plataforma web representa un punto de fallo potencial. Latencias elevadas o errores en la sincronización de registros podrían afectar la trazabilidad histórica de los análisis realizados en campo.
+\end{itemize}
+
+\subsubsection{Restricciones del prototipo}
+
+El presente desarrollo constituye un prototipo funcional con alcance delimitado, por lo que existen restricciones inherentes que deben considerarse al interpretar sus resultados y proyectar su evolución:
+
+\begin{itemize}
+
+    \item \textbf{Dependencia de condiciones de captura.} El prototipo asume que el usuario captura la imagen en condiciones mínimas de calidad: distancia adecuada, iluminación suficiente y encuadre centrado en la corteza. No se implementa aún un mecanismo robusto de validación de imagen en tiempo real que guíe al usuario durante la captura.
+
+    \item \textbf{Ausencia de uso sostenido por usuarios reales.} Al tratarse de un prototipo en etapa inicial, no ha sido sometido a uso continuo por parte de los técnicos o guardabosques que operarían el sistema en campo. Esta falta de uso sostenido dificulta la detección de errores de usabilidad, casos no contemplados durante el desarrollo, y mejoras necesarias que solo emergen con el uso real. En consecuencia, tanto el modelo como la interfaz podrían presentar deficiencias que no son visibles en condiciones de prueba controlada.
+
+    % \item \textbf{Modelo estático sin mecanismo de actualización.} La versión actual del modelo no cuenta con un pipeline de reentrenamiento automático. Cualquier mejora requiere intervención manual del equipo de desarrollo, lo que limita la capacidad del sistema para adaptarse a nuevos datos o condiciones cambiantes sin un ciclo de desarrollo adicional.
+
+    \item \textbf{Cobertura geográfica restringida.} El prototipo está diseñado y validado para el Bosque de Chapultepec como caso de estudio. Su aplicación directa en otras áreas verdes de la Ciudad de México o del país requeriría validación adicional, dado que las especies arbóreas, condiciones ambientales y tipos de plaga pueden diferir significativamente.
+\end{itemize}
+
+\subsubsection{Medidas de mitigación}
+
+Frente a los riesgos y restricciones identificados, se proponen las siguientes medidas para reducir su impacto durante el desarrollo del prototipo y orientar su evolución hacia un sistema más robusto:
+
+\begin{itemize}
+    \item \textbf{Campañas de captura en campo.} Para mitigar el sesgo de dominio y el volumen insuficiente de datos, se recolectan imágenes directamente en el Bosque de Chapultepec, cubriendo las especies arbóreas presentes, distintas etapas de infestación y variadas condiciones de iluminación y temporada. Esto permitirá construir un dataset representativo del dominio real de operación.
+
+    \item \textbf{Aumento de datos orientado al dominio.} Complementariamente a la captura en campo, se aplicarán técnicas de aumento de datos que simulen condiciones reales: variaciones de brillo, rotaciones, recortes aleatorios y ajustes de color, con el objetivo de incrementar artificialmente la diversidad del conjunto de entrenamiento sin requerir captura adicional para cada variante.
+
+    \item \textbf{Validación de imagen previa a la inferencia.} Se implementará un módulo de preprocesamiento que ajuste la imagen capturada (nitidez, exposición y dimensiones) antes de ejecutar la inferencia, reduciendo predicciones erróneas por imágenes de baja calidad.
+
+    \item \textbf{Modo offline en la aplicación móvil.} Para garantizar la operación en zonas del bosque con conectividad limitada, la aplicación almacenará localmente los registros generados y los sincronizará con la plataforma web una vez restablecida la conexión, asegurando la trazabilidad de los análisis sin depender de red en tiempo real.
+
+    \item \textbf{Pruebas con usuarios reales en campo.} Se planea involucrar a técnicos forestales o personal del bosque en sesiones de prueba, con el objetivo de identificar errores de usabilidad y casos no contemplados que solo emergen con el uso real. La información recopilada retroalimentará tanto el diseño de la interfaz como los criterios de reentrenamiento del modelo.
+
+    % Maybe para trabajo a futuro, no?
+    % \item \textbf{Pipeline de reentrenamiento periódico.} A medida que se acumulen nuevas imágenes capturadas en campo, se establecerá un proceso de reentrenamiento controlado que permita actualizar el modelo de forma incremental, reduciendo la deriva temporal y mejorando progresivamente el recall sobre casos de infestación temprana.
+\end{itemize}

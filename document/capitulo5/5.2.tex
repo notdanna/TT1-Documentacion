@@ -1,0 +1,7 @@
+\subsection{Relevancia de las arquitecturas para dispositivos móviles}
+
+El despliegue de modelos de aprendizaje profundo en dispositivos móviles introduce restricciones que no existen en entornos de cómputo en la nube. Un dispositivo móvil cuenta con recursos limitados de memoria, procesamiento y batería, por lo que no cualquier arquitectura es viable para ejecutarse de forma local.
+
+Los factores más relevantes a considerar son el tamaño del modelo, medido en megabytes y número de parámetros, y la latencia de inferencia, es decir, el tiempo que tarda el modelo en procesar una imagen y producir un resultado. Modelos como ResNet-50 superan los 90 MB, mientras que arquitecturas diseñadas para entornos restringidos como MobileNet o EfficientNet-B0 reducen este tamaño considerablemente manteniendo una precisión competitiva.
+
+Estas arquitecturas ligeras logran su eficiencia principalmente mediante convoluciones separables en profundidad (depthwise separable convolutions) \cite{howard2017mobilenets}, que reducen el número de operaciones necesarias sin perder capacidad de extracción de características. Adicionalmente, TensorFlow Lite permite convertir modelos entrenados en Keras a un formato optimizado (.tflite) compatible con Android de forma directa, lo que facilita considerablemente su integración en la aplicación móvil.

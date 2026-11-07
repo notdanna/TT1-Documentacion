@@ -1,0 +1,232 @@
+\newpage
+\subsection{Proyección a ambiente productivo}
+\label{subsec:produccion}
+
+El prototipo desarrollado está diseñado arquitectónicamente para escalar
+hacia un ambiente productivo sin cambios estructurales. Esta sección
+presenta un análisis comparativo de las opciones de infraestructura
+disponibles, una justificación de las instancias de base de datos
+seleccionadas y una estimación de los costos mensuales de infraestructura
+en la nube para un escenario productivo con más de 100 dispositivos
+móviles activos, más de 200 usuarios en la plataforma web y más de
+50,000 imágenes sincronizadas mensualmente.
+
+\subsubsection*{Análisis comparativo: serverless vs contenedores}
+
+Una decisión arquitectónica fundamental para el ambiente productivo es
+la elección entre un modelo serverless basado en AWS Lambda y un modelo
+basado en contenedores con Docker y Kubernetes (Amazon EKS). La
+Tabla~\ref{tab:serverless_vs_eks} resume las diferencias principales
+entre ambos enfoques.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}m{3.5cm}|>
+{\raggedright\arraybackslash}m{5cm}|>{\raggedright\arraybackslash}m{5cm}|}
+\caption{Comparativa entre arquitectura serverless y contenedores para ambiente productivo.}
+\label{tab:serverless_vs_eks} \\
+\hline
+\textbf{Criterio} & \textbf{AWS Lambda (serverless)} & \textbf{Docker + Kubernetes (EKS)} \\
+\hline
+\endfirsthead
+\multicolumn{3}{c}{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{Criterio} & \textbf{AWS Lambda (serverless)} & \textbf{Docker + Kubernetes (EKS)} \\
+\hline
+\endhead
+
+Administración de infraestructura & Nula, AWS gestiona todo automáticamente & Alta, requiere configuración y mantenimiento del cluster \\
+\hline
+Escalado & Automático e instantáneo por invocación & Automático pero requiere configuración de HPA y nodos \\
+\hline
+Cold starts & 2--5 segundos con Micronaut en el primer arranque & Sin cold starts, los contenedores están siempre activos \\
+\hline
+Costo base mensual & \$0.00 si no hay tráfico & ~\$150 USD solo por el cluster EKS, independiente del tráfico \\
+\hline
+Load balancer & No necesario, API Gateway lo reemplaza & Necesario (ALB), costo adicional de ~\$20 USD/mes \\
+\hline
+Límite de ejecución & 15 minutos máximo por función & Sin límite de tiempo de ejecución \\
+\hline
+Ideal para & Tráfico intermitente o impredecible & Tráfico constante y predecible de alto volumen \\
+\hline
+Complejidad operativa & Baja & Alta \\
+\hline
+\end{longtable}
+
+Para el escenario productivo del sistema de detección de insectos
+descortezadores, con 100+ dispositivos sincronizando datos de forma
+\textbf{ocasional} cuando existe conectividad a internet, el modelo
+serverless con AWS Lambda continúa siendo la opción más adecuada. El
+tráfico de sincronización es por naturaleza intermitente, que es
+exactamente el escenario donde Lambda ofrece mayor ventaja económica
+y operativa sobre Kubernetes.
+
+Sin embargo, si el sistema llegara a escalar a \textbf{miles de
+dispositivos} con sincronizaciones frecuentes y continuas, o si se
+requiriera integrar procesos de larga duración como el análisis masivo
+de imágenes en batch, la migración hacia una arquitectura basada en
+contenedores con Amazon EKS, un Application Load Balancer (ALB) y
+Auto Scaling Groups sería la evolución natural. Esta transición no
+requeriría rediseñar la arquitectura base, ya que Micronaut está
+diseñado para ejecutarse tanto en Lambda como en contenedores Docker
+sin cambios significativos en el código.
+
+\subsubsection*{Análisis comparativo de instancias de base de datos}
+
+La selección de la instancia de Amazon RDS para el ambiente productivo
+requiere un balance entre rendimiento, disponibilidad y costo. La
+Tabla~\ref{tab:rds_comparativa} presenta un análisis de las principales
+opciones disponibles para PostgreSQL en la región \texttt{us-east-1}.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}m{2.5cm}|>
+{\centering\arraybackslash}m{1.5cm}|>{\centering\arraybackslash}m{1.8cm}|>
+{\centering\arraybackslash}m{2cm}|>{\centering\arraybackslash}m{2cm}|>
+{\raggedright\arraybackslash}m{3.5cm}|}
+\caption{Comparativa de instancias Amazon RDS PostgreSQL para ambiente productivo (us-east-1, 2026).}
+\label{tab:rds_comparativa} \\
+\hline
+\textbf{Instancia} & \textbf{vCPUs} & \textbf{RAM (GB)} & \textbf{Single-AZ (USD/mes)} & \textbf{Multi-AZ (USD/mes)} & \textbf{Caso de uso} \\
+\hline
+\endfirsthead
+\multicolumn{6}{c}{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{Instancia} & \textbf{vCPUs} & \textbf{RAM (GB)} & \textbf{Single-AZ (USD/mes)} & \textbf{Multi-AZ (USD/mes)} & \textbf{Caso de uso} \\
+\hline
+\endhead
+
+db.t3.micro & 2 & 1 & \$15.33 & \$30.66 & Desarrollo y pruebas, no recomendado para producción \\
+\hline
+db.t3.small & 2 & 2 & \$28.49 & \$56.98 & Producción ligera, hasta 50 usuarios concurrentes \\
+\hline
+\textbf{db.t3.medium} & \textbf{2} & \textbf{4} & \textbf{\$52.56} & \textbf{\$105.12} & \textbf{Producción estándar, 100--200 usuarios, recomendado} \\
+\hline
+db.t3.large & 2 & 8 & \$105.12 & \$210.24 & Alta concurrencia, 500+ usuarios \\
+\hline
+db.m5.large & 2 & 8 & \$138.00 & \$276.00 & Producción intensiva, cargas sostenidas sin bursting \\
+\hline
+\end{longtable}
+
+La instancia \textbf{db.t3.medium} fue seleccionada para el ambiente
+productivo por las siguientes razones:
+
+\begin{itemize}
+    \item \textbf{Memoria suficiente:} Con 4 GB de RAM puede mantener
+    en caché las consultas más frecuentes del sistema, como el historial
+    de detecciones y los registros de árboles, reduciendo la latencia
+    de respuesta.
+    \item \textbf{CPU con bursting:} La familia T3 opera en modo
+    \textit{unlimited}, permitiendo ráfagas de CPU cuando la carga
+    aumenta durante las sincronizaciones masivas, sin requerir una
+    instancia de mayor tamaño de forma permanente.
+    \item \textbf{Costo equilibrado:} Representa el punto óptimo entre
+    rendimiento y costo para el volumen estimado de 100+ dispositivos
+    y 200+ usuarios, con reservación anual para reducir el costo
+    efectivo mensual \cite{aws_rds_pricing}.
+    \item \textbf{Escalabilidad hacia Aurora:} Si el sistema escalara
+    a miles de dispositivos, la migración hacia \textbf{Amazon Aurora
+    PostgreSQL} no requeriría cambios en el código del backend, ya
+    que Aurora es compatible con el protocolo PostgreSQL.
+\end{itemize}
+
+\subsubsection*{Estimación de costos mensuales}
+
+La siguiente estimación fue generada mediante la herramienta oficial
+AWS Pricing Calculator \cite{aws_calculator} para la región
+\texttt{us-east-1} (US East - N. Virginia), vigente a mayo de 2026.
+El tipo de cambio utilizado para la conversión es de \$17.50 MXN por
+dólar estadounidense (USD).
+
+\subsubsection*{Supuestos del escenario productivo}
+
+\begin{itemize}
+    \item \textbf{Dispositivos móviles activos:} 100+ dispositivos
+    sincronizando datos de forma periódica.
+    \item \textbf{Usuarios plataforma web:} 200+ usuarios con sesiones
+    activas.
+    \item \textbf{Imágenes sincronizadas:} 50,000+ imágenes/mes con
+    un tamaño promedio de 2 MB por imagen, equivalente a 100 GB de
+    almacenamiento mensual nuevo.
+    \item \textbf{Invocaciones Lambda:} 5 millones de invocaciones/mes
+    con arquitectura ARM64 (Graviton2), 500ms de duración promedio y
+    512 MB de memoria asignada.
+    \item \textbf{Base de datos:} Instancia \texttt{db.t3.medium}
+    PostgreSQL con Reserved Instance de 1 año y pago parcial anticipado,
+    100 GB de almacenamiento SSD gp3.
+\end{itemize}
+
+\begin{longtable}{|>{\raggedright\arraybackslash}m{4cm}|>
+{\raggedright\arraybackslash}m{4.5cm}|>{\centering\arraybackslash}m{2cm}|>
+{\centering\arraybackslash}m{2cm}|>{\centering\arraybackslash}m{2cm}|}
+\caption{Estimación de costos en ambiente productivo generada con AWS Pricing Calculator (us-east-1, 2026).}
+\label{tab:costos_produccion} \\
+\hline
+\textbf{Servicio} & \textbf{Configuración} & \textbf{Upfront (USD)} & \textbf{Mensual (USD)} & \textbf{Mensual (MXN)} \\
+\hline
+\endfirsthead
+\multicolumn{5}{c}{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{Servicio} & \textbf{Configuración} & \textbf{Upfront (USD)} & \textbf{Mensual (USD)} & \textbf{Mensual (MXN)} \\
+\hline
+\endhead
+
+AWS Lambda & 5M invocaciones, ARM64, 512 MB, 500ms & \$0.00 & \$0.80 & \$14.00 \\
+\hline
+Amazon API Gateway & 5M llamadas REST/mes & \$0.00 & \$17.50 & \$306.25 \\
+\hline
+Amazon RDS PostgreSQL & db.t3.medium, Reserved 1 año, 100 GB gp3 & \$845.00 & \$63.15 & \$1,105.13 \\
+\hline
+Amazon S3 & 500 GB almacenamiento estándar & \$0.00 & \$11.83 & \$206.93 \\
+\hline
+Amazon CloudFront & Pro Plan (1 distribución) & \$0.00 & \$15.00 & \$262.50 \\
+\hline
+Amazon CloudWatch & Logs y métricas & \$0.00 & \$3.00 & \$52.50 \\
+\hline
+AWS WAF & 1 Web ACL, reglas básicas & \$0.00 & \$13.00 & \$227.50 \\
+\hline
+Amazon Cognito & 200+ usuarios activos/mes & \$0.00 & \$10.00 & \$175.00 \\
+\hline
+\textbf{Total} & & \textbf{\$845.00} & \textbf{\$134.28} & \textbf{\$2,349.90} \\
+\hline
+\end{longtable}
+
+El costo mensual recurrente en ambiente productivo asciende a
+\textbf{\$134.28 USD (\$2,349.90 MXN)}, con un pago único inicial de
+\textbf{\$845.00 USD (\$14,787.50 MXN)} correspondiente a la
+reservación anual de la instancia Amazon RDS. El costo total estimado
+para los primeros 12 meses de operación en producción es de
+\textbf{\$2,456.36 USD (\$42,986.30 MXN)}, incluyendo el pago
+anticipado de RDS.
+
+La reservación anual de RDS representa un ahorro significativo respecto
+al precio bajo demanda: la instancia \texttt{db.t3.medium} en
+configuración on-demand costaría aproximadamente \$105 USD/mes
+(\$1,260 USD/año), mientras que con Reserved Instance el costo
+efectivo se reduce a \$845 + (\$63.15 $\times$ 12) = \$1,602.80
+USD/año, un ahorro de alrededor del \textbf{27\%} respecto al precio
+on-demand \cite{aws_rds_pricing}.
+
+\subsubsection*{Estrategias de optimización de costos}
+
+Para reducir el costo mensual en producción, se pueden aplicar las
+siguientes estrategias dentro del mismo ecosistema AWS:
+
+\begin{itemize}
+    \item \textbf{Reserved Instances en RDS:} Ya aplicado en esta
+    estimación, con un ahorro del 27\% respecto al precio on-demand.
+    \item \textbf{Lambda ARM64 (Graviton2):} Las funciones Lambda
+    configuradas con arquitectura ARM64 ofrecen un 20\% de reducción
+    en costos de cómputo sin cambios en el código de Micronaut.
+    \item \textbf{S3 Intelligent-Tiering:} Para imágenes antiguas
+    con acceso poco frecuente, S3 Intelligent-Tiering reduce
+    automáticamente el costo de almacenamiento hasta un 40\%.
+    \item \textbf{CloudFront caché:} Configurar políticas de caché
+    agresivas para los artefactos Angular reduce las solicitudes
+    al origen S3, disminuyendo tanto el costo de CloudFront como
+    el de S3.
+\end{itemize}
+
+La estimación completa puede consultarse en el siguiente enlace
+generado por AWS Pricing Calculator:
+
+\begin{center}
+\url{https://calculator.aws/#/estimate?id=65c11c7fb1e7ea52aab349e587a999504e736112}
+\end{center}
+\cite{aws_calculator}

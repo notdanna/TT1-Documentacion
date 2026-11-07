@@ -1,0 +1,7 @@
+\subsection{Etiquetado de imágenes}
+
+El etiquetado del conjunto de datos se define a partir de la estructura de carpetas en la que se organizan las imágenes, separadas en dos clases: \textit{sano} e \textit{infestado}. Este esquema es compatible con el método de carga \texttt{image\_dataset\_from\_directory} de TensorFlow/Keras, que infiere automáticamente la etiqueta de cada imagen a partir del nombre de la carpeta que la contiene. Dado que el problema se plantea como una tarea de clasificación de imagen completa, no fue necesario el uso de herramientas de anotación/recorte externa como 
+LabelImg o Roboflow, ya que no se requiere delimitar regiones específicas dentro de la imagen.
+
+El criterio de asignación de clase cambia según la funete de la imagen. Las imágenes provenientes de iNaturalist ya contaban con una identificación taxonómica asociada a la presencia del insecto descortezador en el árbol, por lo que su clase fue validada durante el proceso de limpieza del dataset descrito en la Sección 6.2. 
+Las imágenes recolectadas directamente en campo fueron confirmadas con el apoyo de un experto, quien verificó la presencia de las señales visuales características de infestación descritas en la Sección 2.5, entre ellas grumos de resina, galerías en la corteza y alteraciones en la coloración superficial del tronco.

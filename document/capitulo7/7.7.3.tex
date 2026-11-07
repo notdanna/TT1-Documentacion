@@ -1,0 +1,82 @@
+\newpage
+\subsubsection{Pruebas de integración}
+
+Las pruebas de integración verificarán la correcta comunicación entre
+los componentes del sistema, asegurando que los datos fluyan de forma
+íntegra y consistente a través de las distintas capas de la
+arquitectura. Esta sección presenta el plan de pruebas de integración
+que se ejecutará durante la fase de implementación.
+
+\textbf{Herramientas utilizadas:}
+
+\begin{itemize}
+    \item \textbf{Micronaut Test:} Framework oficial de Micronaut para
+    pruebas de integración del backend. Permite levantar el contexto
+    completo de la aplicación en un entorno de pruebas controlado,
+    verificando el comportamiento real de los controladores REST,
+    casos de uso y repositorios.
+    \item \textbf{Testcontainers:} Biblioteca que levanta instancias
+    reales de PostgreSQL en contenedores Docker durante la ejecución
+    de las pruebas, eliminando la necesidad de mocks de base de datos
+    y garantizando que las pruebas reflejen el comportamiento real del
+    sistema en producción.
+    \item \textbf{JUnit 5:} Framework base para la definición y
+    ejecución de los casos de prueba de integración del backend.
+    \item \textbf{Newman:} Ejecutor de colecciones Postman desde línea
+    de comandos, integrado en el pipeline de GitHub Actions para
+    automatizar las pruebas de los endpoints REST en cada despliegue.
+\end{itemize}
+
+La Tabla~\ref{tab:plan_pruebas_integracion} presenta los casos de
+prueba de integración planificados.
+
+\begin{longtable}{|>{\centering\arraybackslash}m{1.5cm}|>
+{\raggedright\arraybackslash}m{3.5cm}|>{\raggedright\arraybackslash}m{4cm}|>
+{\raggedright\arraybackslash}m{4cm}|}
+\caption{Plan de pruebas de integración del sistema.}
+\label{tab:plan_pruebas_integracion} \\
+\hline
+\textbf{ID} & \textbf{Caso de prueba} & \textbf{Componentes involucrados} & \textbf{Resultado esperado} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{ID} & \textbf{Caso de prueba} & \textbf{Componentes involucrados} & \textbf{Resultado esperado} \\
+\hline
+\endhead
+
+PI-01 & Sincronización móvil → API Gateway & App móvil (Retrofit) → API Gateway & La petición POST /sync llega correctamente a API Gateway con el token JWT en el header. \\
+\hline
+PI-02 & Validación JWT en API Gateway & API Gateway → Amazon Cognito & API Gateway valida el token JWT con Cognito y rechaza peticiones sin token con HTTP 401. \\
+\hline
+PI-03 & API Gateway → Lambda & API Gateway → AWS Lambda (Micronaut) & La función Lambda se invoca correctamente y procesa la petición en menos de 5 segundos incluyendo cold start. \\
+\hline
+PI-04 & Lambda → RDS (escritura) & AWS Lambda → Amazon RDS (PostgreSQL) & Los datos de detección se persisten correctamente en PostgreSQL mediante Micronaut Data JPA y Testcontainers. \\
+\hline
+PI-05 & Lambda → S3 (carga de imagen) & AWS Lambda → Amazon S3 & La imagen se carga correctamente en S3 y se retorna la URL pública para su almacenamiento en RDS. \\
+\hline
+PI-06 & Lambda → RDS (lectura) & AWS Lambda → Amazon RDS & La consulta del historial de detecciones retorna los registros correctos desde PostgreSQL. \\
+\hline
+PI-07 & SageMaker → S3 (publicación modelo) & Amazon SageMaker → Amazon S3 & El modelo \texttt{.tflite} se publica correctamente en S3 y es accesible para descarga desde el dispositivo móvil. \\
+\hline
+PI-08 & App móvil → S3 (descarga modelo) & App móvil → Amazon S3 & El dispositivo descarga correctamente la nueva versión del modelo \texttt{.tflite} y lo reemplaza localmente. \\
+\hline
+PI-09 & Angular → API Gateway (petición protegida) & Angular (HttpInterceptor) → API Gateway & El interceptor adjunta el JWT correctamente y la petición recibe respuesta HTTP 200 con datos. \\
+\hline
+PI-10 & CloudFront → S3 (frontend) & Amazon CloudFront → Amazon S3 & CloudFront sirve los artefactos estáticos de Angular con HTTPS y caché correctamente configurado. \\
+\hline
+PI-11 & Flujo completo de sincronización & App móvil → API Gateway → Lambda → RDS → S3 & El ciclo completo de sincronización se ejecuta sin errores y el estado en SQLite cambia a \textbf{Sincronizado}. \\
+\hline
+PI-12 & Flujo completo de consulta web & Angular → API Gateway → Lambda → RDS & La plataforma web consulta y muestra correctamente el historial de detecciones sincronizadas. \\
+\hline
+PI-13 & TFLite + OpenCV en dispositivo & TFLite (EfficientNet-B3) → OpenCV (análisis cromático) & El modelo TFLite y el análisis cromático de OpenCV se ejecutan de forma concurrente y retornan resultados en menos de 3 segundos sin conexión a internet. \\
+\hline
+PI-14 & SQLite → Room (escritura local) & Room → SQLite & Los registros de detección se persisten correctamente en SQLite mediante Room, incluyendo estado, coordenadas, timestamp y referencia de imagen. \\
+\hline
+PI-15 & SQLite → Room (lectura y filtrado) & Room → SQLite & Las consultas de registros pendientes de sincronización retornan únicamente los registros con estado \textbf{Pendiente} o \textbf{Error de sincronización}. \\
+\hline
+PI-16 & Token refresh en Angular & Angular (HttpInterceptor) → Amazon Cognito & Cuando el Access Token expira, el HttpInterceptor solicita automáticamente un nuevo token a Cognito usando el Refresh Token sin interrumpir la sesión del usuario. \\
+\hline
+PI-17 & D3.js con datos reales de la API & Angular (D3.js) → API Gateway → Lambda → RDS & Las visualizaciones de D3.js renderizan correctamente los datos de distribución de focos de infestación y evolución temporal obtenidos desde la API. \\
+\hline
+\end{longtable}

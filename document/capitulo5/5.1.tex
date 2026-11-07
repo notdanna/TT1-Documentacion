@@ -1,0 +1,19 @@
+\newpage
+
+\section*{Capítulo 5. Análisis comparativo de arquitecturas y selección del modelo}
+\addcontentsline{toc}{section}{Capítulo 5. Análisis comparativo de arquitecturas y selección del modelo}
+
+La selección de una arquitectura adecuada es una decisión central en cualquier sistema de clasificación de imágenes basado en Deep Learning. Este capítulo presenta un análisis de las principales familias de arquitecturas relevantes para el problema, con el objetivo de justificar la elección del modelo empleado en el proyecto.
+
+\setcounter{section}{5}
+\setcounter{subsection}{0}
+
+\subsection{Arquitecturas relevantes para clasificación de imágenes}
+Desde hace ya varios años, las Redes Neuronales Convolucionales (CNNs) han sido el estándar para clasificación de imágenes con el uso de modelos de Deep Learning. Estas se componen de capas de nodos que contienen una capa de entrada, una o más capas ocultas y una capa de salida. Cada nodo se conecta a otro y tiene un peso y umbral asociados. Si la salida de cualquier nodo individual está por encima del valor del umbral especificado, ese nodo se activa y envía datos a la siguiente capa de la red; de lo contrario, no se pasa ningún dato a la siguiente capa.
+Las CNN proporcionan un enfoque escalable para las tareas de clasificación de imágenes y reconocimiento de objetos, aprovechando principios del álgebra lineal, específicamente la multiplicación de matrices, para identificar patrones dentro de una imagen. Sin embargo, pueden ser muy exigentes desde el punto de vista computacional, ya que requieren unidades de procesamiento gráfico (GPU) para entrenar los modelos\cite{ibm2025cnn}.
+
+A partir de esta base, las CNN pueden combinarse de formas específicas para construir arquitecturas más complejas. Un ejemplo es YOLO, que secciona la imagen en regiones y aplica múltiples CNNs para detectar objetos de forma individual, lo cual resulta útil cuando la imagen contiene múltiples elementos de interés simultáneos.
+
+Más recientemente, han surgido los Transformers de Visión (ViT), que aplican el principio de atención propio de los Transformers al análisis de imágenes. La principal diferencia respecto a las CNN es que la entrada al modelo es una proyección lineal de parches de la imagen, en lugar de aplicar convoluciones sobre píxeles adyacentes\cite{alka1974_2025vit}.
+
+Estas tres familias de arquitecturas, CNNs clásicas, arquitecturas basadas en detección de regiones y Transformers de visión, representan el panorama actual de modelos para el análisis de imágenes, y serán el punto de referencia para la selección del modelo en este proyecto.

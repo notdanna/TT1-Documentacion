@@ -1,0 +1,36 @@
+\subsection{Estado del arte}
+A continuación, se presenta la Tabla 1, en la que se expone la clasificación de algunos softwares afines al sistema
+propuesto en el presente documento, señalando sus principales características, así como las tecnologías empleadas en
+su desarrollo.
+\begin{table}[H]
+\centering
+\caption{Softwares y trabajos similares a nuestra propuesta}
+\begin{tabular}{|>{\raggedright\arraybackslash}m{4cm}|>{\raggedright\arraybackslash}m{5cm}|>{\raggedright\arraybackslash}m{5cm}|}
+\hline
+\textbf{Software / Trabajo} & \textbf{Características} & \textbf{Tecnologías} \\
+\hline
+\textit{Progress in developing a bark beetle identification tool} (Marais et al., 2025) &
+Clasificación de géneros de escarabajos descortezadores a partir de imágenes con múltiples individuos. Usa fotografía macro para captura reproducible. F1-score de 0.99--1.0 en datos de prueba. &
+Arquitectura MaxViT (Vision Transformer con atención local y global). Dataset disponible en HuggingFace. Transfer learning sobre backbone preentrenado. \\
+\hline
+\textit{Classification of Bark Beetle-Induced Forest Tree Mortality Using Deep Learning} (Huo et al., 2022) &
+Clasifica cuatro etapas de ataque de descortezadores a nivel de árbol individual usando imágenes RGB de UAV. Aborda desbalance de clases con aumentación afín. Accuracy de 98.95\%. &
+Arquitectura RetinaNet con backbone preentrenado para detección de copas. Imágenes RGB capturadas con hexacóptero en bosques del norte de México. \\
+\hline
+\textit{Lightweight YOLOv8 for Apple Leaf Disease Detection} (Zhang et al., 2024) &
+Detecta enfermedades en hojas de manzano en entornos naturales. Optimizado para dispositivos móviles/embebidos. Modifica YOLOv8n reduciendo parámetros sin sacrificar precisión. &
+YOLOv8n + GhostConv + mecanismo de atención global GAM. MDPI Applied Sciences — DOI: 10.3390/app14156710. \\
+\hline
+\textit{Tree Disease Detection Using Image Classification} (IEEE ICCCNT, 2023) &
+Compara tres arquitecturas CNN para detección de enfermedades en hojas de árbol. Accuracies entre 80--83\%. Contexto de bosques reales. &
+InceptionV3, ResNet y MobileNetV2. DOI: 10.1109/ICCCNT56998.2023.10307097. \\
+\hline
+\textit{Apple Leaf Disease Diagnosis \& Mobile App with DeepLabV3+} (2023) &
+Segmentación semántica de lesiones en hojas de manzano para medir severidad. Desplegado en smartphone con 9s por imagen. MIoU de 83.85\%. &
+DeepLabV3+ para segmentación. App móvil. MDPI Plants — DOI: 10.3390/plants12040786. \\
+\hline
+\end{tabular}
+\label{tab:softwares_similares}
+\end{table}
+
+Para este proyecto se presenta el desarrollo de un sistema móvil de visión por computadora basado en un modelo de aprendizaje profundo, entrenado tanto en máquinas locales como en la nube, para la detección automática de plagas descortezadoras en los árboles de uno de los bosques de la Ciudad de México. A diferencia de los métodos tradicionales de inspección visual, el sistema permitirá un monitoreo constante y digitalizado, generando un historial de árboles afectados, enfocado en la toma de decisiones en la gestión forestal. El modelo se va a entrenar a partir de imágenes recolectadas en campo y buscará optimizar la detección temprana de plagas, como apoyo a los especialistas en las primeras etapas del análisis del lugar y apoyando la toma de decisiones en el cuidado de los bosques urbanos de la Ciudad de México.

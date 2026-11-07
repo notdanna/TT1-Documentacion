@@ -1,0 +1,127 @@
+
+\newpage
+\subsection{Reglas de negocio del sistema}
+Las reglas de negocio definen los criterios que rigen el comportamiento del sistema en relación con la detección de plagas y el procesamiento de imágenes. Reflejan decisiones metodológicas independientes de la tecnología utilizada y se presentan en la Tabla 5.
+
+\begin{longtable}{|>{\centering\arraybackslash}m{1.8cm}|>{\centering\arraybackslash}m{2.5cm}|m{9.5cm}|}
+\caption{Reglas de negocio de la aplicación móvil y la plataforma web}\label{tab:reglas_operacion} \\
+\hline
+\textbf{ID} & \textbf{Tipo} & \textbf{Descripción} \\
+\hline
+\endfirsthead
+\multicolumn{3}{c}%
+{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{ID} & \textbf{Tipo} & \textbf{Descripción} \\
+\hline
+\endhead
+
+RN-01 & Acceso & Solo los usuarios con rol \textbf{Administrador} podrán crear cuentas nuevas. El registro no será abierto al público. \\
+\hline
+RN-02 & Acceso & El rol \textbf{Experto de campo} podrá iniciar sesión en la app móvil y web. El rol \textbf{Administrador} solo podrá iniciar sesión en la app web. \\
+\hline
+RN-03 & Sesión & La sesión en la app móvil persistirá activa hasta que el usuario cierre sesión manualmente. No expirará por inactividad. \\
+\hline
+RN-04 & Seguridad & El enlace de recuperación de contraseña tendrá una vigencia máxima de 24 horas a partir de su generación. \\
+\hline
+RN-05 & Seguridad & El enlace de recuperación será de un solo uso; una vez utilizado quedará invalidado automáticamente. \\
+\hline
+RN-06 & Seguridad & El sistema permitirá un máximo de 3 solicitudes de recuperación de contraseña por usuario en un periodo de 30 días naturales. \\
+\hline
+RN-07 & Imagen & Solo se aceptarán imágenes en formato JPG, JPEG, PNG, WEBP, BMP y HEIC. \\
+\hline
+RN-08 & Imagen & El tamaño máximo de imagen aceptado será de 10 MB. \\
+\hline
+RN-09 & Imagen & La resolución mínima aceptada será de 300$\times$300 píxeles, correspondiente al tamaño de entrada requerido por EfficientNet-B3. Imágenes con resolución menor serán rechazadas por el sistema con un mensaje informativo al usuario. \\
+\hline
+RN-10 & Edición & La herramienta de edición disponible antes del análisis será recorte de la imagen. \\
+\hline
+RN-11 & Edición & La herramienta de edición se aplicará únicamente antes del análisis. Una vez procesada la imagen, no podrá modificarse. \\
+\hline
+RN-12 & Edición & La edición de la imagen es opcional; el usuario podrá omitirla y proceder directamente al análisis. \\
+\hline
+RN-13 & Ubicación & Si la imagen proviene de la galería y contiene metadatos de ubicación, el sistema utilizará esas coordenadas como ubicación del árbol. \\
+\hline
+RN-14 & Ubicación & Si la imagen no contiene metadatos de ubicación, el sistema utilizará las coordenadas del GPS del dispositivo en el momento del registro. \\
+\hline
+RN-15 & Ubicación & Si no es posible obtener la ubicación por ninguna de las dos vías, el registro se guardará sin coordenadas y se marcará como \textbf{Ubicación no disponible}, sin bloquear el flujo de captura. \\
+\hline
+RN-16 & Registros & El usuario podrá eliminar manualmente un registro local antes de sincronizarlo. Esta acción será irreversible y requerirá confirmación explícita. \\
+\hline
+RN-17 & Registros & Cada registro local tendrá uno de los siguientes estados: \textbf{Pendiente de sincronización}, \textbf{Sincronizado} o \textbf{Error de sincronización}. \\
+\hline
+RN-18 & Registros & Cada registro local deberá contener como mínimo: imagen, resultado del modelo, timestamp de captura, coordenadas GPS y árbol asociado. \\
+\hline
+RN-19 & Sincronización & La sincronización automática se activará cuando el dispositivo detecte conexión a internet, ya sea por datos móviles o Wi-Fi. \\
+\hline
+RN-20 & Sincronización & En caso de fallo durante la sincronización, el sistema reintentará automáticamente hasta 3 veces antes de marcar el registro como \textbf{Error de sincronización}. \\
+\hline
+RN-21 & Sincronización & La fecha y hora de sincronización se almacenará como un campo adicional separado del timestamp original de captura. Ambos valores serán visibles en la app web. \\
+\hline
+RN-22 & Modelo & El resultado generado por el modelo se mostrará al experto inmediatamente después de la captura, etiquetado explícitamente como \textbf{Offline}. \\
+\hline
+RN-23 & Modelo & El sistema clasificará el árbol en dos categorías únicamente: \textbf{Sano} o \textbf{Infestado}. \\
+\hline
+RN-24 & Modelo & El modelo TFLite solo emitirá una clasificación si el nivel de confianza supera el 75\%. Si no supera ese umbral, el resultado se mostrará como \textbf{No determinado} y se recomendará al experto retomar la captura. \\
+\hline
+RN-25 & Alertas & De acuerdo con la NOM-019-SEMARNAT-2017 \cite{nom019_semarnat_2017}, se considerará \textbf{foco de infestación activo} cuando se registren 3 o más árboles clasificados como infectados dentro de una superficie de 1{,}000 m$^2$. \\
+\hline
+RN-26 & Interfaz & Los indicadores visuales de estado sanitario utilizarán el siguiente código de color: \textbf{verde} para sano, \textbf{rojo} para infestado y \textbf{amarillo} para no determinado. \\
+\hline
+RN-27 & Alertas & De acuerdo con la NOM-019-SEMARNAT-2017 \cite{nom019_semarnat_2017}, el sistema considerará que el experto está en proximidad de un foco de infestación cuando se encuentre a 100 metros o menos de las coordenadas de un árbol catalogado como foco. \\
+\hline
+RN-28 & Alertas & La alerta de proximidad se generará usando únicamente el GPS del dispositivo y los registros locales almacenados en SQLite, funcionando sin conexión a internet. \\
+\hline
+RN-29 & Alertas & No se emitirá más de una alerta por foco en un periodo de 60 minutos para evitar notificaciones repetitivas mientras el experto permanezca en la zona. \\
+\hline
+RN-30 & Jornada & El resumen de jornada considerará únicamente los registros cuyo timestamp de captura corresponda al día en curso, desde las 00:00 hasta las 23:59. \\
+\hline
+RN-31 & Jornada & El resumen de jornada se actualizará en tiempo real conforme el experto realice nuevas capturas durante la jornada. \\
+\hline
+RN-32 & Sincronización & El sistema debe permitir al usuario reintentar manualmente la sincronización de los registros marcados con estado \textbf{Error de sincronización}, siempre que el dispositivo cuente con conexión a internet activa. \\
+\hline
+RN-33 & Reportes & Los reportes generados desde la app web incluirán el historial sincronizado en la nube de un periodo de tiempo o de una zona específica. \\
+\hline
+RN-34 & Reportes & Todo reporte deberá incluir como mínimo: identificador del árbol, nombre del árbol, fecha y hora de captura, resultado de clasificación, coordenadas GPS y nombre del experto que realizó la captura. \\
+\hline
+RN-35 & Almacenamiento & La eliminación automática de registros del almacenamiento local solo podrá aplicarse a registros con estado \textbf{Sincronizado}. Los registros en estado \textbf{Pendiente} o \textbf{Error} no deberán eliminarse automáticamente hasta que sean sincronizados o eliminados manualmente por el usuario. \\
+\hline
+RN-36 & Historial & El historial visible en la app móvil mostrará únicamente los registros del dia actual. \\
+\hline
+RN-37 & Árboles & No puede existir una captura sin un árbol asociado. La selección o creación del árbol es un paso obligatorio antes de proceder al análisis. \\
+\hline
+RN-38 & Árboles & Al crear un nuevo árbol, el sistema generará automáticamente un identificador único. El usuario deberá asignar manualmente un nombre al árbol y seleccionar su especie de una lista predefinida basada en las especies hospederas documentadas para el Bosque de Chapultepec, entre ellas \textbf{Fresno} (\textit{Fraxinus uhdei}) y \textbf{Cedro blanco} (\textit{Cupressus lusitanica}), además de otras que el Administrador podrá gestionar desde la app web. \\
+\hline
+RN-39 & Árboles & El nombre asignado al árbol podrá complementarse con una descripción libre opcional, por ejemplo: \textit{Pino 1 con bordes irregulares en corteza}, para facilitar su identificación en campo. \\
+\hline
+RN-40 & Usuarios & Solo el rol \textbf{Administrador} podrá crear, editar, desactivar y asignar roles a usuarios. \\
+\hline
+RN-41 & Usuarios & El \textbf{Experto de campo} podrá editar registros de árboles y agregar observaciones en la app movil. \\
+\hline
+RN-42 & Historial & El historial en la app web no tendrá restricción de tiempo; mostrará todos los registros sincronizados desde el inicio del sistema. \\
+\hline
+RN-43 & Alertas & El radio de proximidad para alertas definido en RN-29 será configurable únicamente desde la app web por el \textbf{Administrador}. \\
+\hline
+RN-44 & Alertas & De acuerdo con la NOM-019-SEMARNAT-2017 \cite{nom019_semarnat_2017}, el sistema deberá considerar como periodos de mayor riesgo los meses de enero a mayo y de septiembre a noviembre, pudiendo emitir alertas estacionales en la app web durante estos periodos. \\
+\hline
+RN-45 & Modelo & Las evidencias visuales de infestación que el sistema buscará identificar mediante el modelo de clasificación incluyen: presencia de grumos de resina rojiza en el fuste, cambios de coloración del follaje de verde a verde amarillento o rojizo, y presencia visible de galerías o daños en la corteza. \\
+\hline
+RN-46 & Análisis cromático & El análisis complementario de color se ejecutará de forma local en el dispositivo de forma concurrente al modelo TensorFlow Lite, utilizando OpenCV, sin requerir conexión a internet. \\
+\hline
+RN-47 & Análisis cromático & El análisis de color del follaje clasificará los píxeles en tres rangos cromáticos correspondientes a las fases de infestación documentadas: verde, verde-amarillento o verde limón, y café-rojizo. El resultado se expresará como porcentaje de cada rango sobre el total de píxeles analizados. \\
+\hline
+RN-48 & Análisis cromático & El análisis de color de la corteza clasificará los píxeles en los rangos cromáticos asociados a las fases de colonización subcortical: blanco/crema/rojizo, café-anaranjado y café-grisáceo. El resultado se expresará como porcentaje de cada rango sobre el total de píxeles analizados. \\
+\hline
+RN-49 & Análisis cromático & El análisis cromático se ejecutará de forma independiente según el tipo de imagen procesada, ya sea follaje o corteza, dado que cada nivel opera en un espacio visual distinto. No se realizarán comparaciones ni agregaciones cromáticas entre imágenes de diferente naturaleza dentro de un mismo análisis. \\
+\hline
+RN-50 & Almacenamiento & La base de datos local SQLite de la aplicación móvil no deberá almacenar imágenes como datos binarios de forma permanente. Únicamente deberá guardar metadatos del análisis y una referencia, ruta temporal o URL de la evidencia fotográfica.\\
+\hline
+RN-51 & Historial & La evidencia fotográfica completa solo estará disponible para consulta desde la plataforma web después de que el registro haya sido sincronizado correctamente con la nube.\\
+\hline
+RN-52 & Sincronización & La sincronización de datos se realizará únicamente desde la base local del dispositivo móvil hacia la base central en la nube. El sistema no contemplará la descarga automática de registros desde la nube hacia otros dispositivos móviles.\\
+\hline
+RN-53 & Historial & La aplicación web permitirá consultar y analizar los registros sincronizados desde los dispositivos móviles, pero no modificará los registros operativos generados en la app móvil.\\
+\hline
+RN-54 & Usuarios & Las funciones CRUD del Administrador aplicarán únicamente sobre datos administrativos o de configuración del sistema almacenados en la nube.\\
+\hline
+\end{longtable}

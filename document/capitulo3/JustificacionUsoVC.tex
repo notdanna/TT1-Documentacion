@@ -1,0 +1,21 @@
+\subsection{Justificación del uso de visión por computadora en el proyecto}
+
+A partir del análisis de la naturaleza de los datos de entrada, así como de la información general relacionada con la visión por computadora, es necesario que el desarrollo del presente proyecto se lleve a cabo dentro de este campo de la inteligencia artificial, ya que será de utilidad para poder analizar el contenido visual (imágenes) y extraer características importantes mediante un modelo de aprendizaje automático o profundo. 
+
+En secciones anteriores se mencionó que, antes de llevar a cabo el flujo de trabajo común para el desarrollo de un sistema mediante visión por computadora, es necesario definir y delimitar el problema. Dentro de este proceso, se encuentra principalmente la \textit{selección del tipo de tarea al que estará sujeto el proyecto}. Bajo esta consideración, el problema abordado puede relacionarse principalmente con tres tareas, las cuales son: \textbf{clasificación de imágenes, detección de objetos y segmentación de imágenes}. 
+
+En primer lugar, la \textbf{clasificación de imágenes} consiste en asignar una categoría predefinida a una imagen u objetos dentro de la misma \cite{ibm_computer_vision}. En este sentido, esta tarea permitiría determinar si un árbol presenta o no indicios de infestación por insectos descortezadores.
+
+En segundo lugar, la \textbf{detección de objetos} busca localizar y delimitar la ubicación de objetos dentro de una imagen, así como identificar la categoría a la que pertenecen, haciendo uso de dos técnicas: \textit{la localización de objetos y la clasificación de imágenes }\cite{ibm_computer_vision}. A través de esta tarea, se podrían identificar y localizar zonas específicas del tronco o de la corteza de los árboles en las que se visualicen indicios de infestación.
+
+Por último, la \textbf{segmentación de imágenes} puede definirse como una versión más detallada de la detección de objetos. Si bien también se centra en localizar y delimitar la ubicación de los objetos, así como en identificar la categoría a la que pertenecen, su principal diferencia radica en que esta tarea delimita a nivel de pixel, lo que implica una localización puntual de un objeto, llegando incluso a aproximar su ancho y alto \cite{ibm_computer_vision}. Desde esta perspectiva, se podría identificar detalladamente la superficie infestada, así como aproximar su extensión.
+
+Conforme al panorama expuesto, las tres tareas tienen relación con el problema general; pese a ello, no todas resultan ser factibles ni viables dentro del alcance del proyecto. 
+
+En el caso de la detección de objetos, las imágenes deben estar etiquetadas, proceso que se realiza por humanos a través de una interfaz de anotación, en donde se definen cajas delimitadoras para los objetos con el fin de entrenar a un modelo capaz de reconocer y clasificar zonas de acuerdo con patrones visuales \cite{murel2026object_detection}.
+
+Por otra parte, en el caso de la segmentación de imágenes, Bergmann afirma que “los conjuntos de datos de entrenamiento deben ser etiquetados previamente por humanos expertos, lo cual es una tarea extremadamente laboriosa” \cite{bergmann2026image_segmentation}. Incluso, si consideramos que la segmentación es una tarea más compleja que la detección, entonces se puede concluir que el proceso de etiquetado es mucho más preciso que en la detección de objetos, puesto que ya no solo se trabaja con objetos en particular, sino a nivel de pixeles.
+
+Desde luego, lo mencionado anteriormente se convierte en una limitación; tanto la detección de objetos como la segmentación requieren conjuntos de datos con anotaciones más detalladas, así como mayores requerimientos computacionales para entrenamiento. Debido a ello, se tomó la decisión de \textit{plantear el sistema} principalmente como una \textbf{tarea de clasificación de imágenes}, de tal suerte que el modelo que se elija sea capaz de determinar si un árbol presenta o no indicios de infestación por plaga de insectos descortezadores.
+
+

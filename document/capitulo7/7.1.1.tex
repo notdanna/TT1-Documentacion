@@ -1,0 +1,81 @@
+
+\subsubsection{Requerimientos funcionales}\label{subsec:rf}
+Los requisitos funcionales definen las capacidades y comportamientos específicos que el sistema debe satisfacer, diferenciados por componente: la aplicación móvil, orientada al monitoreo en campo, y el panel web, destinado a la gestión y consulta de resultados. 
+
+Con el propósito de reflejar claramente a qué subsistema aplica cada requerimiento, se ha adoptado un esquema de etiquetado de requisitos funcionales con el ámbito de aplicación correspondiente: aplicación móvil (\textbf{MOV}), aplicación web (\textbf{WEB}) o ambos entornos (\textbf{MOV/WEB}).
+
+La Tabla 3 resume estos requisitos.
+
+\begin{longtable}{|>
+{\centering\arraybackslash}m{1.8cm}|>{\centering\arraybackslash}m{2.2cm}|m{10cm}|}
+\caption{Requerimientos funcionales de la aplicación móvil y la plataforma web}\label{tab:rf} \\
+\hline
+\textbf{ID} & \textbf{Ámbito} & \textbf{Descripción} \\
+\hline
+\endfirsthead
+\multicolumn{3}{c}%
+{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{ID} & \textbf{Ámbito} & \textbf{Descripción} \\
+\hline
+\endhead
+
+RF-01 & MOV/WEB & El sistema debe permitir al usuario registrarse e iniciar sesión utilizando un correo electrónico y una contraseña. \\
+\hline
+RF-02 & MOV/WEB & El sistema debe permitir al usuario solicitar la recuperación de su contraseña a través de un enlace enviado a su correo electrónico. \\
+\hline
+RF-03 & MOV & El sistema debe permitir la entrada de imágenes de dos formas: capturándolas directamente desde la aplicación o subiéndolas desde la galería del dispositivo. \\
+\hline
+RF-04 & MOV & El sistema debe contar con herramientas de edición básicas antes de enviar la imagen a procesar. \\
+\hline
+RF-05 & MOV & El sistema debe registrar automáticamente la ubicación geográfica del árbol fotografiado, obtenida a partir de los metadatos de la fotografía o del GPS del dispositivo en el momento de la captura. \\
+\hline
+RF-06 & MOV & El sistema debe almacenar localmente un registro de todas las imágenes ingresadas por el usuario, incluyendo su resultado de clasificación, \textit{timestamp} y ubicación, para su posterior sincronización con la nube. \\
+\hline
+RF-07 & MOV & El sistema debe sincronizar los registros almacenados localmente hacia la nube cuando el usuario cuente con conexión a internet, conservando la fecha y hora original de captura como referencia del registro. \\
+\hline
+RF-08 & MOV/WEB & La aplicación móvil deberá incorporar un modelo en formato TensorFlow Lite embebido en el dispositivo para realizar una clasificación local e inmediata de la imagen capturada cuando no se tenga acceso a internet.
+La aplicación web deberá incorporar un modelo en formato Keras3 para realizar una clasificación en la nube de la imagen capturada en la aplicación movil.  
+\\
+\hline
+RF-09 & MOV & El sistema debe emitir y mostrar en pantalla una clasificación inmediata del estado sanitario del árbol, indicando si está sano o infectado, generada por el modelo local embebido en el dispositivo, sin requerir conexión a internet. \\
+\hline
+RF-10 & WEB & El sistema debe permitir agrupar y dar seguimiento a un conjunto de muestras específicas a lo largo del tiempo, generando un historial del estado de salud de cada ejemplar. \\
+\hline
+RF-11 & MOV/WEB & El sistema debe mostrar alertas o indicadores visuales con el analisis complementario de color que faciliten la detección de focos de infestación. \\
+\hline
+RF-12 & MOV & El sistema debe mostrar un resumen estadístico de la jornada actual, incluyendo el número total de fotografías tomadas en el día, la cantidad de árboles clasificados como sanos y la cantidad de posibles infecciones detectadas. \\
+\hline
+RF-13 & MOV & El sistema debe proveer acceso directo y visible a la función principal: ``Nueva Captura''. \\
+\hline
+RF-14 & MOV & El sistema debe mostrar notificaciones o alertas cuando el usuario se encuentre en las proximidades de una zona previamente catalogada como foco de infestación. \\
+\hline
+RF-15 & MOV & La sincronización manual estará disponible únicamente cuando existan errores de sincronización y el dispositivo cuente con conexión activa. En caso contrario, el sistema deberá deshabilitar esta opción e informar al usuario la causa. \\
+\hline
+RF-16 & WEB & El sistema debe permitir generar un reporte básico en formato PDF de las capturas realizadas. \\
+\hline
+RF-17 & WEB & El sistema debe permitir descargar el reporte generado. \\
+\hline
+RF-18 & MOV & El sistema debe conservar en el almacenamiento local del dispositivo los registros asociados a las imágenes capturadas, excepto estas últimas. \\
+\hline
+RF-19 & MOV & El sistema debe permitir al usuario asociar una nueva captura a un árbol ya existente en el registro local, o bien crear un nuevo registro de árbol al momento de realizar una captura. \\
+\hline
+RF-20 & WEB & El sistema debe mostrar el historial completo y permanente de todos los árboles registrados, incluyendo sus capturas, resultados de clasificación, observaciones y fechas de subida y sincronización, sin restricción de periodo de tiempo. \\
+\hline
+RF-21 & WEB & El sistema debe mostrar estadísticas generales del estado del arbolado registrado, incluyendo totales por estado sanitario, distribución por especie y evolución temporal de los focos de infestación detectados. \\
+\hline
+RF-22 & MOV/WEB & El sistema movil debe ejecutar un análisis complementario de color sobre la imagen capturada y mostrar su resultado como información complementaria al resultado de clasificación, tanto en la app móvil como en la app web. \\
+\hline
+RF-23 & MOV & El sistema debe permitir al usuario operativo editar la información de un registro de árbol, incluyendo la actualización de su estado sanitario y la adición de observaciones o notas de campo. \\
+\hline
+RF-24 & WEB & El sistema debe mostrar un mapa general con la ubicación de todos los árboles registrados, permitiendo filtrarlos por estado sanitario, especie, fecha de captura y dispositivo. \\
+\hline
+RF-25 & MOV & El sistema debe mostrar un mapa general con la ubicación de todos los árboles registrados del dispositivo, permitiendo filtrarlos por estado sanitario, especie y fecha de captura. \\
+\hline
+RF-26 & WEB & El sistema debe permitir al administrador gestionar las cuentas de usuario del sistema, incluyendo la creación, edición, desactivación y asignación de roles. \\
+\hline
+RF-27 & MOV/WEB & El sistema deberá permitir que una cuenta de experto de campo pueda estar asociada a uno o varios dispositivos móviles. Cada dispositivo deberá mantener una base de datos local independiente en SQLite para almacenar árboles, capturas, análisis y ubicaciones registrados offline. Al recuperar conexión, la aplicación móvil deberá sincronizar los registros locales con la base de datos central en la nube, conservando la identificación del dispositivo de origen. \\
+\hline
+RF-28 & MOV & Cuando dos dispositivos asociados a la misma cuenta registren árboles con el mismo nombre, el sistema no deberá asumir que se trata del mismo árbol físico. \\
+\hline
+\end{longtable}

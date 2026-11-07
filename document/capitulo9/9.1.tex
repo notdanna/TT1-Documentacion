@@ -1,0 +1,273 @@
+\newpage
+\section*{Capítulo 9. Pruebas y validación del sistema}
+\addcontentsline{toc}{section}{Capítulo 9. Pruebas y validación del sistema}
+\setcounter{section}{9}
+\setcounter{subsection}{0}
+
+En este capítulo se presentan las pruebas y evaluaciones técnicas realizadas para verificar el cumplimiento de los requerimientos funcionales (\textbf{RF}) y no funcionales (\textbf{RNF}) del sistema \textit{EcoVerde}, establecidos en el Capítulo 7. Debido a que el proyecto adopta una estrategia \textit{offline-first} para operar en zonas forestales sin conectividad, resulta fundamental validar el comportamiento de la aplicación móvil y determinar en qué tipos de dispositivos es viable su ejecución sin comprometer la estabilidad ni la precisión del análisis fitosanitario.
+
+\subsection{Pruebas de viabilidad de requisitos funcionales en dispositivos móviles}
+\label{subsec:pruebas-viabilidad-movil}
+
+La aplicación móvil representa la herramienta central de trabajo en campo para el \textbf{Experto de campo}. A diferencia de la plataforma web, donde el procesamiento y las consultas complejas se delegan a los servicios en la nube (AWS), la aplicación móvil debe ejecutar tareas de alta exigencia de forma local y autónoma:
+
+\begin{itemize}
+    \item \textbf{Captura y decodificación de fotografías (\textbf{RF-03}):} Procesamiento en memoria de imágenes en alta resolución capturadas con la cámara o seleccionadas desde la galería.
+    \item \textbf{Geolocalización satelital precisa (\textbf{RF-05}):} Obtención de coordenadas geográficas mediante el sensor GNSS/GPS con al menos cinco decimales de precisión, requerimiento indispensable para delimitar el radio de alerta de 100 metros en apego a la norma NOM-019-SEMARNAT-2017 \cite{nom019_semarnat_2017}.
+    \item \textbf{Almacenamiento local offline (\textbf{RF-06}, \textbf{RF-18}, \textbf{RNF-15}):} Persistencia transaccional de los registros y fotografías en una base de datos local SQLite mediante la librería \textbf{Room}, asegurando que la información no se pierda en campo.
+    \item \textbf{Inferencia local con TensorFlow Lite (\textbf{RF-08}, \textbf{RF-09}):} Clasificación inmediata del estado sanitario del árbol mediante el modelo embebido \textit{EfficientNet-B3} en formato \texttt{.tflite}, sin requerir conexión a internet.
+    \item \textbf{Análisis cromático complementario (\textbf{RF-11}):} Segmentación y evaluación de color en espacio HSV mediante \textbf{OpenCV} para apoyar la detección de indicios visuales en la corteza.
+    \item \textbf{Visualización de mapas fuera de línea (\textbf{RNF-03}, \textbf{RNF-11}):} Renderizado interactivo de mapas vectoriales mediante la librería nativa \textbf{MapLibre GL} y el archivo de teselas locales (\texttt{cdmx.pmtiles}).
+\end{itemize}
+
+Por esta razón, evaluar los límites de hardware y el rendimiento en distintos dispositivos móviles constituye una prueba directa de la viabilidad de estos requerimientos funcionales en condiciones de operación real.
+
+\subsubsection{Requisitos de hardware mínimos y recomendados}
+\label{subsubsec:requisitos-hardware}
+
+A partir de las mediciones de memoria, procesamiento y almacenamiento obtenidas en el dispositivo de prueba de referencia (\textit{Google Pixel 7 Pro}), se definieron los requisitos técnicos necesarios para el funcionamiento de la aplicación móvil. La Tabla~\ref{tab:requisitos_hardware} presenta la comparativa entre los requisitos mínimos para una ejecución estable y los requisitos recomendados para un desempeño óptimo.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}m{2.8cm}|>{\raggedright\arraybackslash}m{2.6cm}|>{\raggedright\arraybackslash}m{2.6cm}|>{\raggedright\arraybackslash}m{5.8cm}|}
+\caption{Requisitos de hardware mínimos y recomendados para la aplicación móvil.}
+\label{tab:requisitos_hardware} \\
+\hline
+\textbf{Componente} & \textbf{Requisito mínimo (Entrada)} & \textbf{Requisito recomendado (Media/Alta)} & \textbf{Justificación técnica en el sistema} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{Componente} & \textbf{Requisito mínimo (Entrada)} & \textbf{Requisito recomendado (Media/Alta)} & \textbf{Justificación técnica en el sistema} \\
+\hline
+\endhead
+
+Memoria RAM & 3~GB (LPDDR4x) & 6~GB a 12~GB (LPDDR5) & La aplicación consume en reposo $\approx$184~MB de memoria física real (\textit{PSS}), alcanzando picos de 280 a 320~MB durante la captura con cámara, decodificación del bitmap y ejecución concurrente de TFLite y MapLibre. En dispositivos con 2~GB o menos (como Android Go), existe riesgo elevado de cierre forzoso por el \textit{Low Memory Killer} (LMK) al procesar imágenes de 12~MP. \\
+\hline
+Espacio libre (ROM) & 500~MB libres & 2~GB a 4~GB libres & La aplicación instalada ocupa entre 90 y 140~MB. El archivo de teselas locales (\texttt{cdmx.pmtiles}) requiere 29~MB, el modelo embebido 21~MB y la base SQLite inicial de 1 a 5~MB. El espacio restante actúa como reserva para almacenar entre 150 y 200 fotografías en campo (1.5~MB en promedio cada una) antes de sincronizar con la nube (\textbf{RF-07}). \\
+\hline
+Procesador (SoC) & Octa-Core ARMv8-A de 64 bits (e.g., Helio G85, Snapdragon 680) & SoC con aceleración por NPU/DSP (e.g., Google Tensor G2/G3, Snapdragon 778G / 8 Gen 2) & En procesadores de gama de entrada con núcleos Cortex-A55 @ 2.0~GHz, la inferencia local de EfficientNet-B3 (300$\times$300~px) toma entre 600 y 1,100~ms. En procesadores de gama alta toma de 90 a 180~ms. Un tiempo de aproximadamente un segundo resulta perfectamente aceptable para el trabajo en campo. \\
+\hline
+Cámara & 8~MP a 12~MP con Autoenfoque (AF) & 12~MP a 50~MP con OIS y sensor de mayor tamaño & El diagnóstico fitosanitario de corteza requiere fotografiar el fuste a corta distancia (macro a 15--30~cm) para distinguir orificios de entrada (1.5 a 4~mm) y grumos de resina. Sensores sin autoenfoque producen imágenes borrosas que impiden una clasificación correcta. \\
+\hline
+Sensor GPS / GNSS & GPS compatible con A-GPS y GLONASS & GPS de doble frecuencia (L1 + L5) y Galileo & La norma NOM-019-SEMARNAT-2017 exige delimitar un radio de alerta de 100~metros alrededor de los árboles afectados. Se requiere una precisión satelital de al menos 5 cifras decimales ($\pm$3 a 5~m de margen de error). \\
+\hline
+Sistema Operativo & Android 8.0 (Oreo, API 26) & Android 12 a 15 (API 31--35) & Definido en la configuración del proyecto mediante \texttt{minSdk = 26} y \texttt{targetSdk = 35}, garantizando compatibilidad con la gran mayoría de los dispositivos Android activos. \\
+\hline
+\end{longtable}
+
+\subsubsection{Clasificación de dispositivos por gama de rendimiento}
+\label{subsubsec:clasificacion-gamas}
+
+Con base en los requerimientos anteriores, los dispositivos móviles compatibles se clasificaron en tres gamas principales para estimar su comportamiento en campo:
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item \textbf{Gama de Entrada / Baja (Compatibilidad condicionada):}
+    \begin{itemize}
+        \item \textit{Modelos de referencia:} Samsung Galaxy A04s / A13, Xiaomi Redmi 9A / 10C, Motorola Moto G22.
+        \item \textit{Comportamiento esperado:} La aplicación funciona de manera estable; la inferencia local tarda cerca de 1 segundo por imagen y la pantalla se refresca a 60~Hz o 90~Hz. En estos dispositivos se recomienda no mantener múltiples aplicaciones abiertas en segundo plano para evitar que el sistema libere memoria cerrando la aplicación durante la captura.
+    \end{itemize}
+    
+    \item \textbf{Gama Media (Rendimiento óptimo en campo):}
+    \begin{itemize}
+        \item \textit{Modelos de referencia:} Samsung Galaxy A34 / A54, Xiaomi Redmi Note 12 / 13 Pro, Motorola Moto G84.
+        \item \textit{Comportamiento esperado:} La inferencia local se completa en aproximadamente 250 a 350~ms, las transiciones y el desplazamiento del mapa son fluidos a 60--120~Hz y el almacenamiento permite varias semanas de trabajo continuo en campo sin requerir limpieza de datos.
+    \end{itemize}
+    
+    \item \textbf{Gama Alta (Dispositivo de referencia de desarrollo):}
+    \begin{itemize}
+        \item \textit{Modelos de referencia:} Google Pixel 7 Pro (equipo empleado en las pruebas), Samsung Galaxy S23 / S24, Motorola Edge 40 Pro.
+        \item \textit{Comportamiento validado:} Inferencia prácticamente instantánea ($<$150~ms) aprovechando la NPU integrada, visualización fluida a 120~Hz nativos sin sobrecalentamiento y fijación GPS rápida y precisa mediante sistemas de doble banda (L1+L5).
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{Metodología de validación y benchmark con dispositivo de prueba}
+\label{subsubsec:metodologia-benchmark}
+
+Dado que para el desarrollo del proyecto se contó físicamente con un único dispositivo de gama alta (\textit{Google Pixel 7 Pro}), se estableció una metodología de pruebas compuesta por cuatro herramientas y técnicas formales, permitiendo evaluar el rendimiento real y simular el comportamiento de la aplicación en dispositivos de menor gama sin necesidad de adquirir equipo adicional:
+
+\paragraph{Método A: Simulación de gama baja en el dispositivo físico mediante ADB.}
+A través de comandos de \textit{Android Debug Bridge} (\texttt{adb}), es posible modificar de manera temporal la resolución de pantalla, la densidad de píxeles y el perfil de energía del procesador del Google Pixel 7 Pro. Esto permite emular las condiciones de un teléfono económico de gama de entrada:
+
+\begin{verbatim}
+# 1. Simular pantalla de gama baja (720p HD+ a 280 DPI)
+adb shell wm size 720x1600
+adb shell wm density 280
+
+# 2. Reducir frecuencia de CPU (modo ahorro extremo)
+adb shell cmd power set-adaptive-power-saver-enabled false
+adb shell cmd power set-mode 1
+
+# 3. Pruebas de captura, recorte e inferencia
+
+# 4. Restaurar valores originales del Pixel 7 Pro
+adb shell wm size reset
+adb shell wm density reset
+adb shell cmd power set-mode 0
+\end{verbatim}
+
+\paragraph{Método B: Extracción de métricas de rendimiento reales mediante ADB Profiling.}
+Durante la ejecución continua de las funciones de la aplicación (\textbf{RF-03}, \textbf{RF-08}, \textbf{RF-11}), se recolectaron los datos cuantitativos del sistema mediante los siguientes comandos:
+
+\begin{itemize}
+    \item \textbf{Consumo de memoria RAM (\texttt{dumpsys meminfo}):}
+    Permite obtener el consumo de memoria real del proceso \texttt{com.descortezadores.ecoverde}:
+\begin{verbatim}
+adb shell dumpsys meminfo com.descortezadores.ecoverde
+\end{verbatim}
+    Métricas reportadas:
+    \begin{itemize}
+        \item \textit{Total PSS (Proportional Set Size):} Memoria física real utilizada por la aplicación, incluyendo la porción proporcional de bibliotecas compartidas (lectura obtenida: 183.8~MB).
+        \item \textit{Java Heap:} Memoria consumida por los objetos de la aplicación en Kotlin y Compose (lectura obtenida: 15.8~MB).
+        \item \textit{Native Heap:} Memoria utilizada por librerías nativas en C++, incluyendo el motor de TensorFlow Lite y MapLibre GL (lectura obtenida: 2.3~MB).
+    \end{itemize}
+
+    \item \textbf{Rendimiento gráfico y fluidez de la interfaz (\texttt{dumpsys gfxinfo}):}
+    Permite medir los tiempos de renderizado y la presencia de cuadros retrasados (\textit{jank}):
+\begin{verbatim}
+adb shell dumpsys gfxinfo com.descortezadores.ecoverde
+\end{verbatim}
+    Métricas reportadas:
+    \begin{itemize}
+        \item \textit{Percentil 50 (P50):} Tiempo típico de renderizado por cuadro (lectura obtenida: 6.0~ms, equivalente a más de 120~cuadros por segundo).
+        \item \textit{Percentil 90 (P90):} Tiempo de renderizado en transiciones de pantalla (lectura obtenida: 15.0~ms).
+        \item \textit{Janky frames:} Porcentaje de cuadros retrasados (lectura obtenida en modo depuración: 6.19\%, por debajo del umbral de tolerancia del 10\%).
+    \end{itemize}
+
+    \item \textbf{Uso de CPU en reposo frente a inferencia (\texttt{top}):}
+    Permite verificar la carga del procesador durante la ejecución del modelo:
+\begin{verbatim}
+adb shell top -n 1 -p $(adb shell pidof com.descortezadores.ecoverde)
+\end{verbatim}
+\end{itemize}
+
+\paragraph{Método C: Emuladores con restricciones de hardware en Android Studio (AVD).}
+Dentro de Android Studio se crearon dispositivos virtuales (\textit{Android Virtual Device}) con especificaciones intencionalmente limitadas: memoria RAM configurada en 2,048~MB (2~GB) o 3,072~MB (3~GB), \textit{VM Heap} en 192~MB y procesador asignado a 2 núcleos virtuales. En este entorno se corroboró que el asistente de captura, la inferencia local y el mapa cargaran correctamente sin generar errores de falta de memoria (\textit{OutOfMemoryError}).
+
+\paragraph{Método D: Pruebas automatizadas en la nube con Firebase Test Lab.}
+Con el propósito de validar la compatibilidad en terminales físicas de diferentes marcas y versiones del sistema operativo, se utilizó la plataforma gratuita \textit{Firebase Test Lab} de Google. Mediante pruebas automatizadas de exploración (\textit{Robo Tests}) sobre el paquete instalable (\texttt{app-debug.apk}), se verificó el funcionamiento en dispositivos físicos reales de gama baja (Samsung Galaxy A12 y A13) y gama media (Xiaomi Redmi Note 10 y Galaxy A52) con versiones de Android 10 a 14, comprobando la estabilidad de la aplicación y la ausencia de fallos críticos.
+
+\subsubsection{Resultados del benchmark y criterios de aceptación}
+\label{subsubsec:resultados-benchmark}
+
+A partir de las pruebas descritas, se estructuró la Tabla~\ref{tab:benchmark_resultados}, donde se comparan los valores obtenidos en el dispositivo de prueba contra los umbrales de aceptación definidos para los requerimientos funcionales y de calidad del sistema.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}m{3.3cm}|>{\raggedright\arraybackslash}m{3.0cm}|>{\raggedright\arraybackslash}m{2.2cm}|>{\raggedright\arraybackslash}m{3.3cm}|>{\centering\arraybackslash}m{1.9cm}|}
+\caption{Resultados del benchmark y evaluación frente a umbrales de aceptación.}
+\label{tab:benchmark_resultados} \\
+\hline
+\textbf{Métrica evaluada} & \textbf{Entorno / Dispositivo} & \textbf{Valor obtenido} & \textbf{Umbral de aceptación} & \textbf{Estado} \\
+\hline
+\endfirsthead
+\multicolumn{5}{c}{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{Métrica evaluada} & \textbf{Entorno / Dispositivo} & \textbf{Valor obtenido} & \textbf{Umbral de aceptación} & \textbf{Estado} \\
+\hline
+\endhead
+
+Consumo de RAM en reposo (PSS) & Google Pixel 7 Pro & 183.8~MB & $<$ 300~MB & \textbf{Aprobado} \\
+\hline
+Consumo de RAM en inferencia máxima & Google Pixel 7 Pro (Cámara + TFLite) & $\approx$295~MB & $<$ 450~MB & \textbf{Aprobado} \\
+\hline
+Tiempo de inferencia local (TFLite) & Google Tensor G2 (ARMv9 Cortex-X2) & $\approx$140~ms & $<$ 1,500~ms & \textbf{Aprobado} \\
+\hline
+Tiempo de inferencia estimado en gama baja & Emulación Cortex-A55 (con limitación ADB) & $\approx$850~ms & $<$ 2,000~ms & \textbf{Aprobado} \\
+\hline
+Renderizado gráfico (Percentil 50) & Pantalla LTPO a 120~Hz & 6.0~ms & $<$ 8.3~ms (120~Hz) / $<$ 16.6~ms (60~Hz) & \textbf{Aprobado} \\
+\hline
+Cuadros con retraso (\textit{Janky Frames}) & Flujo completo de navegación (Debug) & 6.19\% & $<$ 10.0\% & \textbf{Aprobado} \\
+\hline
+Espacio de instalación y datos locales & Almacenamiento interno privado & 39~MB (Datos) + 110~MB (App) & $<$ 300~MB & \textbf{Aprobado} \\
+\hline
+Tolerancia a modo desconectado (\textit{Offline}) & Operación sin conexión celular ni Wi-Fi & 100\% de funciones operativas & Operación 100\% desconectado (\textbf{RF-09}) & \textbf{Aprobado} \\
+\hline
+\end{longtable}
+
+\subsubsection{Casos de incompatibilidad y limitaciones técnicas}
+\label{subsubsec:limites-incompatibilidad}
+
+Para delimitar el alcance del proyecto con claridad metodológica, es tan importante documentar en qué condiciones funciona el sistema como establecer en qué tipos de dispositivos no es viable su uso. Se identificaron seis tipos de dispositivos en los que la aplicación móvil no funcionará o presentará fallos críticos:
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item \textbf{Dispositivos con menos de 2.5~GB de RAM (versiones Android Go):}
+    \begin{itemize}
+        \item \textit{Dispositivos de ejemplo:} Samsung Galaxy A03 Core (2~GB), Motorola Moto E13 (2~GB), Xiaomi Redmi A1+ (2~GB), Nokia C02 (1~GB).
+        \item \textit{Causa técnica:} Al capturar una fotografía de 12 a 50~MP, el sistema operativo debe decodificar el mapa de bits (\textit{Bitmap}) en memoria RAM sin compresión (ARGB\_8888), consumiendo entre 48 y 90~MB de forma instantánea. Al mismo tiempo, el intérprete de TensorFlow Lite asigna $\approx$21~MB nativos para los pesos de EfficientNet-B3 y MapLibre GL retiene de 40 a 60~MB en texturas gráficas. En dispositivos con 1 o 2~GB de RAM, el límite máximo de memoria por aplicación suele ser de solo 96 a 128~MB.
+        \item \textit{Tipo de fallo:} Al tomar la fotografía o recortarla, la aplicación se cierra de forma inesperada debido a una excepción \texttt{OutOfMemoryError} o porque el kernel de Linux activa el \textit{Low Memory Killer} (LMK).
+    \end{itemize}
+
+    \item \textbf{Tablets o dispositivos ``Solo Wi-Fi'' (sin chip GPS integrado):}
+    \begin{itemize}
+        \item \textit{Dispositivos de ejemplo:} Tablets económicas sin ranura SIM o de uso escolar (e.g., Amazon Fire 7/8/10, tablets genéricas de punto de venta).
+        \item \textit{Causa técnica y biológica:} Estos dispositivos no cuentan con un receptor físico de satélites GNSS (GPS/GLONASS), de modo que solo pueden obtener su ubicación mediante la triangulación de redes Wi-Fi cercanas. En áreas forestales como el Bosque de Chapultepec o zonas de alta montaña no existen redes Wi-Fi disponibles.
+        \item \textit{Tipo de fallo y afectación funcional:} El módulo de geolocalización no puede obtener coordenadas (\textit{Location Unavailable}), incumpliendo el requerimiento \textbf{RF-05} y la norma NOM-019-SEMARNAT-2017 \cite{nom019_semarnat_2017}, la cual exige coordenadas exactas para delimitar el radio de alerta de 100~metros alrededor del ejemplar evaluado.
+    \end{itemize}
+
+    \item \textbf{Dispositivos con cámara de enfoque fijo (\textit{Fixed-Focus} / sin autoenfoque):}
+    \begin{itemize}
+        \item \textit{Dispositivos de ejemplo:} Teléfonos celulares ultra-básicos o tablets infantiles de muy bajo costo.
+        \item \textit{Causa técnica y biológica:} Las cámaras de enfoque fijo vienen calibradas para enfocar objetos a partir de un metro hacia el infinito. Sin embargo, el diagnóstico de corteza requiere enfocar a corta distancia (macro a 15--30~cm) para distinguir grumos de resina y orificios de entrada del insecto (de 1.5 a 4~mm).
+        \item \textit{Tipo de fallo:} Las imágenes resultan desenfocadas y borrosas, lo que provoca que tanto el modelo de aprendizaje profundo como la segmentación cromática HSV arrojen falsos negativos o diagnósticos no determinados de forma constante.
+    \end{itemize}
+
+    \item \textbf{Dispositivos con Android 7.1.1 (Nougat, API 25) o versiones anteriores:}
+    \begin{itemize}
+        \item \textit{Dispositivos de ejemplo:} Equipos lanzados en 2016 o antes (e.g., Samsung Galaxy S6, Motorola Moto G4, Nexus 5).
+        \item \textit{Causa técnica:} El archivo de configuración \texttt{app/build.gradle.kts} define como versión mínima \texttt{minSdk = 26} (Android 8.0 Oreo), requerida por las bibliotecas modernas de Jetpack Compose y las APIs de mapas y geolocalización.
+        \item \textit{Tipo de fallo:} El sistema operativo bloquea la instalación de la aplicación mostrando el mensaje de error:
+\begin{verbatim}
+INSTALL_FAILED_OLDER_SDK: The package requires an sdk
+version of at least 26 but target is 25
+\end{verbatim}
+    \end{itemize}
+
+    \item \textbf{Dispositivos con almacenamiento libre crítico ($<$ 300~MB libres):}
+    \begin{itemize}
+        \item \textit{Dispositivos de ejemplo:} Teléfonos de 16 o 32~GB cuyo almacenamiento se encuentra saturado por otras aplicaciones o archivos multimedia.
+        \item \textit{Causa técnica:} La base de datos local SQLite implementada con \textit{Room} opera mediante el modo \textit{Write-Ahead Logging} (WAL), el cual requiere espacio libre para escribir archivos temporales de registro durante las transacciones. Además, las fotografías capturadas se guardan de forma provisional en el almacenamiento interno de la aplicación.
+        \item \textit{Tipo de fallo:} Cuando el espacio disponible desciende por debajo de $\approx$150~MB, el sistema operativo bloquea la escritura de archivos y se genera la excepción:
+\begin{verbatim}
+android.database.sqlite.SQLiteFullException:
+database or disk is full (code 13)
+\end{verbatim}
+        Como consecuencia, la captura no puede guardarse en la base de datos local y el registro de inspección se pierde (\textbf{RF-06}).
+    \end{itemize}
+
+    \item \textbf{Dispositivos sin soporte para OpenGL ES 2.0 / 3.0:}
+    \begin{itemize}
+        \item \textit{Dispositivos de ejemplo:} Emuladores antiguos de computadora configurados en renderizado por software (\textit{Software Rendering}) o dispositivos con procesadores gráficos obsoletos.
+        \item \textit{Causa técnica:} El motor de mapas MapLibre GL Native (\texttt{libmaplibre.so}) dibuja las teselas vectoriales y los marcadores en pantalla a través de la GPU.
+        \item \textit{Tipo de fallo:} La aplicación inicia con normalidad, pero al entrar a la vista del mapa, la pantalla se cierra inesperadamente con un error nativo:
+\begin{verbatim}
+Fatal signal 11 (SIGSEGV) in libmaplibre.so:
+Failed to initialize EGL/OpenGL context
+\end{verbatim}
+    \end{itemize}
+\end{enumerate}
+
+Como síntesis de las restricciones identificadas, la Tabla~\ref{tab:resumen_incompatibilidad} resume los tipos de incompatibilidad, los síntomas observados en la aplicación, la causa técnica asociada y el requerimiento que se ve directamente comprometido.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}m{2.8cm}|>{\raggedright\arraybackslash}m{3.3cm}|>{\raggedright\arraybackslash}m{4.7cm}|>{\centering\arraybackslash}m{2.8cm}|}
+\caption{Resumen de restricciones técnicas e incompatibilidades de hardware.}
+\label{tab:resumen_incompatibilidad} \\
+\hline
+\textbf{Tipo de incompatibilidad} & \textbf{Síntoma en la aplicación} & \textbf{Causa técnica y excepción} & \textbf{Requisito afectado} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}{{\bfseries Tabla \thetable\ -- continuación}} \\
+\hline
+\textbf{Tipo de incompatibilidad} & \textbf{Síntoma en la aplicación} & \textbf{Causa técnica y excepción} & \textbf{Requisito afectado} \\
+\hline
+\endhead
+
+RAM $<$ 2.5~GB (Android Go) & Cierre inesperado al tomar foto o recortar la imagen & \texttt{OutOfMemoryError} o activación del LMK por decodificación de imagen + TFLite & \textbf{RF-03}, \textbf{RF-08} \\
+\hline
+Tablet ``Solo Wi-Fi'' & Imposibilidad de registrar coordenadas en el bosque & Ausencia de chip receptor satelital GNSS/GPS; excepción \textit{Location Unavailable} & \textbf{RF-05}, NOM-019 \\
+\hline
+Cámara sin autoenfoque (\textit{Fixed-Focus}) & Diagnósticos erróneos o dictámenes de \texttt{NO\_DETERMINADO} & Imposibilidad de enfocar grumos y orificios de 2~mm a corta distancia (20~cm) & \textbf{RF-03}, \textbf{RF-09}, \textbf{RF-11} \\
+\hline
+Android $<$ 8.0 (API $<$ 26) & El sistema no permite instalar la aplicación en el equipo & Error del instalador del sistema: \texttt{INSTALL\_FAILED} \texttt{\_OLDER\_SDK} & \textbf{RNF-11} \\
+\hline
+Espacio $<$ 300~MB libres & Error al guardar la inspección y pérdida del registro & Excepción \texttt{SQLiteFullException} por falta de espacio para fotos y base de datos & \textbf{RF-06}, \textbf{RF-18}, \textbf{RNF-15} \\
+\hline
+Sin soporte OpenGL ES 2.0 / 3.0 & Cierre inesperado de la aplicación al abrir la pestaña del mapa & Fallo al inicializar el contexto gráfico en \texttt{libmaplibre.so} (\texttt{SIGSEGV}) & \textbf{RNF-03}, \textbf{RNF-11} \\
+\hline
+\end{longtable}

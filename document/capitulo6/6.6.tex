@@ -1,0 +1,8 @@
+\subsection{Organización de los datos para entrenamiento, validación y prueba}
+
+El conjunto de datos de corteza se divide en tres subconjuntos: entrenamiento, validación y prueba, siguiendo una proporción de 80/10/10 respectivamente. Esta distribución maximiza la cantidad de imágenes disponibles para el entrenamiento, lo cual es relevante dado el tamaño del dataset, mientras que los subconjuntos de validación y prueba mantienen una muestra suficiente para evaluar el desempeño del modelo de forma confiable.
+
+El subconjunto de entrenamiento es el que el modelo utiliza directamente para ajustar sus parámetros durante el proceso de aprendizaje. El subconjunto de validación se emplea para monitorear el desempeño del modelo al final de cada época y detectar posibles problemas de sobreajuste durante el entrenamiento. 
+Finalmente, el subconjunto de prueba se reserva completamente hasta la evaluación final del modelo, garantizando que los resultados reportados reflejen el desempeño real ante datos no vistos en ninguna etapa previa.
+
+La división se realiza de forma aleatoria pero estratificada, asegurando que la proporción entre la clase \textit{sano} e \textit{infestado} se mantenga equivalente en los tres subconjuntos, lo cual es especialmente importante para mantener un balance entre ambas clases en el dataset.

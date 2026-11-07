@@ -1,0 +1,58 @@
+REPORTE DE ENTRENAMIENTO - Clasificador de corteza (sano / infestado)
+Generado: 2026-08-17 21:28:03
+======================================================================
+
+1. CONFIGURACIÓN
+  data_dir: dataset_limpio
+  manifest: manifest.csv
+  img_size: 300  batch_size: 16  seed: 42
+  epocas_fase1 (planeadas): 10  |  corridas: 10
+  epocas_fase2 (planeadas): 30  |  corridas: 18
+  descongelar_desde: 250
+  suavizado_pesos: 0.6
+  beta (F-beta): 0.7
+  dropout: 0.3
+
+2. DATOS
+  Total imágenes tras filtrado: 6085
+  Árboles (grupos) detectados: 4589
+  train: 5009 imágenes | {'sano': 2912, 'infestado': 2097}
+  val: 557 imágenes | {'sano': 281, 'infestado': 276}
+  test: 519 imágenes | {'infestado': 260, 'sano': 259}
+  Pesos de clase usados: {0: 0.9160370879120879, 1: 1.1165951359084407}
+
+3. UMBRAL ÓPTIMO (buscado en validación, nunca en test)
+  Umbral elegido: 0.5791
+  En ese umbral (validación): precisión=0.986, recall=0.986, F-beta=0.986
+
+4. EVALUACIÓN FINAL EN TEST (con umbral óptimo)
+              precision    recall  f1-score   support
+
+        sano       0.95      0.97      0.96       259
+   infestado       0.97      0.95      0.96       260
+
+    accuracy                           0.96       519
+   macro avg       0.96      0.96      0.96       519
+weighted avg       0.96      0.96      0.96       519
+
+Matriz de confusión (filas=real, columnas=predicho):
+[[252   7]
+ [ 12 248]]
+
+5. EXPORTACIÓN
+  Modelo TFLite: reportes/run_20260817_203830/modelos/bark_classifier.tflite (20.58 MB)
+  Umbral a aplicar en producción: 0.5791 (NO usar 0.5)
+
+6. ARCHIVOS GENERADOS EN ESTA CARPETA
+  - reporte.txt
+  - historial_entrenamiento.csv
+  - metricas_test.csv
+  - candidatos_revision_manual.csv
+  - graficas/curvas_entrenamiento.png
+  - graficas/metricas_balanceadas.png
+  - graficas/matriz_confusion_test.png
+  - graficas/curva_precision_recall.png
+  - graficas/distribucion_probabilidades_test.png
+  - modelos/mejor_modelo_fase1.keras
+  - modelos/mejor_modelo_fase2.keras
+  - modelos/bark_classifier.tflite

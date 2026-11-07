@@ -1,0 +1,18 @@
+\newpage
+\section*{Capítulo 6. Conjunto de datos y preprocesamiento}
+\addcontentsline{toc}{section}{Capítulo 6. Conjunto de datos y preprocesamiento}
+
+Los conjuntos de datos en el contexto de Machine Learning requieren una organización clara de clases y un formato de imagen bien definido, especialmente cuando se trabaja con un modelo preentrenado cuyos pesos han sido congelados tras haber sido entrenado con un formato específico.
+
+\setcounter{section}{6}
+\setcounter{subsection}{0}
+
+\subsection{Recopilación de datos}
+
+La recopilación de imágenes para el dataset se compone de dos fuentes principales. La primera corresponde a capturas propias realizadas en campo en distintos bosques de la Ciudad de México, con énfasis en el Bosque de Chapultepec como caso de estudio. La segunda proviene de iNaturalist, plataforma comunitaria de ciencia 
+ciudadana donde usuarios de todo el mundo documentan observaciones de flora y fauna. Dado que la plataforma permite filtrar por taxonomía, fue posible identificar registros asociados a la familia de insectos descortezadores y recuperar las imágenes que resultaron de mayor utilidad para los objetivos del proyecto.
+
+El conjunto de datos se organiza en dos tipos de imágenes según el nivel de observación al que corresponden. El primero agrupa imágenes de follaje capturadas desde una perspectiva aérea, utilizadas para identificar zonas del arbolado con posibles afecciones a partir del análisis cromático descrito en la Sección 2.5.1. El segundo agrupa imágenes de corteza tomadas directamente sobre el tronco de los 
+árboles, cuyo propósito es alimentar el modelo de clasificación para determinar si un árbol presenta o no indicios de infestación.
+
+Las imágenes de follaje se mantienen en una sola clase, ya que su uso no requiere una separación por etapa de infestación sino que sirven como referencia para definir los rangos cromáticos del análisis de color. Las imágenes de corteza, en cambio, se organizan de forma binaria en dos clases: \textit{sano} e \textit{infestado}. Todas las imágenes han sido estandarizadas a una resolución de $300 \times 300$ píxeles en formato JPG, correspondiente al tamaño de entrada requerido por EfficientNet-B3.

@@ -1,0 +1,21 @@
+\newpage
+\subsubsection{Herramientas para el procesamiento de imágenes}
+
+El procesamiento de imágenes del sistema se apoyará en herramientas
+especializadas que permitirán preparar, transformar y analizar las
+imágenes tanto durante el entrenamiento del modelo como en la
+ejecución en el dispositivo móvil.
+
+\textbf{OpenCV} será la biblioteca principal para el procesamiento
+de imágenes en el sistema. Durante el entrenamiento, permitirá realizar
+operaciones de redimensionamiento, conversión de espacios de color,
+normalización de píxeles y transformaciones geométricas sobre las
+imágenes del conjunto de datos, facilitando la construcción de pipelines de preprocesamiento compatibles con EfficientNet-B3.
+
+En la aplicación móvil, OpenCV se utilizará para ejecutar el análisis
+complementario de color de forma local en el dispositivo. Este análisis
+clasificará los píxeles de la imagen en rangos cromáticos asociados
+a las distintas fases de infestación documentadas, tanto para imágenes
+de follaje como de corteza, operando de forma concurrente al modelo
+TFLite y sin requerir conexión a internet, tal como se establece en
+la regla de negocio RN-46.

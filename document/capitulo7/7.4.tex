@@ -1,0 +1,46 @@
+\newpage
+\subsection{Actores del sistema}
+Un actor representa cualquier entidad externa que interactúa con el sistema, ya sea una persona, un rol organizacional o un sistema externo. En el contexto de UML, los actores no forman parte del sistema en sí, sino que se relacionan con él a través de los casos de uso, iniciando acciones o recibiendo resultados de las mismas.
+
+Para el presente sistema, los actores fueron definidos considerando los roles operativos involucrados en el proceso de monitoreo forestal. Por consiguiente, se identificaron los siguientes actores:
+
+\begin{enumerate}
+    \item \textbf{Experto de campo}\\
+    Persona encargada de utilizar la aplicación móvil en campo y la plataforma web para consultar la información sincronizada. Este actor registra árboles, realiza análisis del estado sanitario y consulta los datos generados durante la jornada.
+        \begin{itemize}
+            \item Iniciar sesión en la aplicación móvil o web.
+            \item Recuperar y restablecer contraseña.
+            \item Capturar o importar imágenes de árboles.
+            \item Recortar o repetir una imagen antes del análisis.
+            \item Asociar una imagen a un árbol nuevo o existente.
+            \item Registrar datos de árboles nuevos.
+            \item Modificar datos de árboles existentes desde la aplicación móvil.
+            \item Obtener la clasificación del estado sanitario del árbol.
+            \item Consultar el análisis complementario de color.
+            \item Consultar registros recientes de la jornada.
+            \item Consultar el historial local de análisis de la jornada.
+            \item Consultar el mapa local de árboles.
+            \item Filtrar registros, árboles o mapas según el estado sanitario u otros criterios disponibles.
+            \item Consultar notificaciones y alertas.
+            \item Reintentar manualmente la sincronización de registros con error.
+            \item Consultar información consolidada desde la plataforma web.
+            \item Consultar historial general, mapa general, estadísticas y perfil de usuario en la web.
+            \item Cerrar sesión.
+        \end{itemize}
+
+    \item \textbf{Administrador}\\
+    Persona encargada de gestionar las cuentas de usuario y los dispositivos asociados desde la plataforma web. Este actor no modifica los registros operativos capturados desde la aplicación móvil, sino que administra la información de acceso y configuración relacionada con las cuentas.
+        \begin{itemize}
+            \item Iniciar sesión en la plataforma web.
+            \item Recuperar y restablecer contraseña.
+            \item Crear cuentas de usuario.
+            \item Editar cuentas de usuario.
+            \item Desactivar cuentas de usuario.
+            \item Asignar roles de usuario.
+            \item Gestionar dispositivos asociados a una cuenta.
+            \item Asociar dispositivos móviles a una cuenta.
+            \item Desasociar dispositivos móviles de una cuenta.
+            \item Consultar dispositivos asociados a una cuenta.
+            \item Cerrar sesión.
+        \end{itemize}
+\end{enumerate}

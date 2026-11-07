@@ -1,0 +1,8 @@
+\subsection{Análisis complementario de color}
+
+El análisis complementario de color tiene como objetivo identificar en la imagen la presencia de tonalidades asociadas a las fases de infestación descritas en la Sección 2.5, sirviendo como información adicional al resultado del modelo de clasificación. Este análisis se ejecuta de forma local en el dispositivo de manera concurrente al modelo TensorFlow Lite, sin requerir conexión a internet, tal como se establece en la RN-49.
+
+El análisis se realiza sobre el espacio de color HSV (\textit{Hue, Saturation, Value}), que a diferencia del espacio RGB permite aislar el tono cromático en un solo canal, facilitando la definición de rangos de color más precisos en variaciones de brillo e iluminación propias de las capturas en campo.
+
+Para las imágenes de corteza, el análisis clasifica los píxeles en rangos cromáticos correspondientes a las fases de colonización documentadas: tonos blancos y crema 
+asociados a la respuesta defensiva activa del árbol, tonos café-anaranjados relacionados con una colonización avanzada, y tonos café-rojizos y grisáceos presentes en etapas de daño severo o muerte del árbol. El resultado se expresa como el porcentaje de píxeles pertenecientes a cada rango sobre el total de píxeles analizados en la imagen, conforme a lo establecido en la RN-51.

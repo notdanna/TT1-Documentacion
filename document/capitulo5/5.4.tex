@@ -1,0 +1,7 @@
+\subsection{Transfer learning y fine-tuning}
+
+El transfer learning es una técnica que consiste en reutilizar un modelo previamente entrenado en un conjunto de datos de gran escala como punto de partida para una tarea distinta. \textbf{En lugar de inicializar los pesos de forma aleatoria, el modelo hereda representaciones ya aprendidas}, como bordes, texturas y formas, lo que reduce significativamente el tiempo de entrenamiento y la cantidad de datos necesarios.
+
+Para este proyecto, el uso de transfer learning es especialmente relevante dado que el dataset se construye a partir de imágenes recolectadas directamente en campo, lo que limita su tamaño. Entrenar un modelo desde cero en estas condiciones resultaría en sobreajuste y un rendimiento deficiente.
+
+La estrategia adoptada combina dos fases: en la primera se aplica feature extraction, manteniendo los pesos del modelo base congelados y entrenando únicamente la cabeza de clasificación. En la segunda fase se realiza fine-tuning, descongelando las últimas capas del modelo base y continuando el entrenamiento con una tasa de aprendizaje reducida, permitiendo que el modelo se adapte a las características visuales específicas.

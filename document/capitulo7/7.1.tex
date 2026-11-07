@@ -1,0 +1,14 @@
+\newpage
+\section*{Capítulo 7. Análisis del sistema}
+\addcontentsline{toc}{section}{Capítulo 7. Análisis del sistema}
+
+ En esta sección se hace el analisis de los requerimientos, componenetes del sistema y pruebas del mismo con razón de identificar los riesgos, restricciones y buscar las medidas de mitigación necesarias.
+
+\setcounter{section}{7}
+\setcounter{subsection}{0}
+
+\subsection{Requerimientos del sistema}
+
+El presente proyecto tiene como producto principal el desarrollo de un sistema móvil para la detección de insectos descortezadores mediante visión por computadora. Sin embargo, durante el análisis del problema se identificó que una aplicación móvil por sí sola no es suficiente para cubrir todas las necesidades del proceso de monitoreo forestal. El Experto de campo requiere una herramienta ágil, funcional sin conexión a internet y orientada a la captura y análisis inmediato en sitio; posteriormente, puede utilizar la plataforma web para consultar la información consolidada, revisar historiales, visualizar mapas generales y analizar estadísticas derivadas de los registros sincronizados.
+
+Por esta razón, el sistema se compone de dos subsistemas complementarios: una aplicación móvil Android diseñada bajo un enfoque offline-first, que constituye el núcleo del prototipo para el trabajo en campo, y una plataforma web orientada a la consulta y supervisión de la información recolectada. Ambos subsistemas se relacionan mediante una base de datos central en la nube. La aplicación móvil almacena los registros en una base local SQLite y posteriormente los sincroniza de forma ascendente hacia la nube cuando existe conexión a internet. La plataforma web consulta la información consolidada en dicha base central, pero no modifica los registros operativos generados desde los dispositivos móviles.

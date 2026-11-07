@@ -1,0 +1,15 @@
+Archivo,Keras (%),Clase_Keras,TFLite (%),Clase_TFLite,Diferencia
+inf.webp,95.8,Infestado,95.23,Infestado,0.5661
+alder_2.jpg,7.68,Sano,7.55,Sano,0.1313
+5549894.jpg,7.23,Sano,8.58,Sano,1.3567
+alder_1.jpg,6.35,Sano,11.45,Sano,5.1036
+5543613.jpg,8.13,Sano,7.41,Sano,0.7214
+5454221.jpg,7.41,Sano,7.16,Sano,0.254
+5543614.jpg,16.23,Sano,8.14,Sano,8.0973
+HEY.jpg,2.33,Sano,2.87,Sano,0.5403
+TEST.jpg,13.59,Sano,15.54,Sano,1.9462
+5500295.jpg,6.02,Sano,6.21,Sano,0.1899
+5471595.jpg,7.88,Sano,6.67,Sano,1.2064
+5468774.jpg,8.53,Sano,10.43,Sano,1.9088
+5526018.jpg,3.69,Sano,3.19,Sano,0.4999
+5559140.jpg,7.08,Sano,7.38,Sano,0.3042

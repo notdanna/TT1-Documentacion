@@ -1,0 +1,40 @@
+\subsubsection{Herramientas para el desarrollo del modelo}
+
+El modelo de clasificación del sistema se desarrollará utilizando
+Python como lenguaje principal, apoyándose en un conjunto de
+herramientas especializadas en aprendizaje profundo y visión por
+computadora.
+
+\textbf{TensorFlow y Keras} constituirán el núcleo del proceso de
+entrenamiento. TensorFlow es un framework de código abierto desarrollado
+por Google, ampliamente utilizado en la industria y la academia para
+la construcción y entrenamiento de modelos de aprendizaje profundo.
+Keras actúa como interfaz de alto nivel sobre TensorFlow, simplificando
+la definición de arquitecturas de redes neuronales convolucionales como
+EfficientNet-B3, seleccionada para la clasificación de imágenes de
+árboles en este proyecto.
+
+\textbf{TensorFlow Lite} es la versión optimizada de TensorFlow
+orientada a dispositivos móviles y embebidos. Una vez entrenado el
+modelo con Keras, este se convertirá al formato \texttt{.tflite},
+reduciendo su tamaño y optimizando su rendimiento para ejecutarse
+directamente en el dispositivo Android sin requerir conexión a internet.
+Esta conversión es fundamental para el enfoque offline-first del sistema.
+
+\textbf{Scikit-learn} se empleará como herramienta complementaria
+durante el proceso de entrenamiento y evaluación del modelo. Aportará
+métricas de evaluación como precisión, recall, F1-score y matriz de
+confusión, permitiendo analizar el desempeño del modelo de clasificación
+de forma rigurosa antes de su conversión a formato TFLite.
+
+\textbf{Amazon SageMaker} se empleará como plataforma de registro y
+versionado del modelo. Una vez que el modelo sea entrenado en los
+equipos de cómputo disponibles, se registrará en SageMaker Model
+Registry para llevar control de versiones y garantizar la trazabilidad
+de cada iteración antes de publicarlo en Amazon S3 para su distribución
+al dispositivo móvil.
+
+El entrenamiento se realizará sobre los equipos de cómputo del equipo
+de desarrollo, aprovechando las capacidades de procesamiento local
+disponibles para la experimentación y ajuste de hiperparámetros del
+modelo.

@@ -1,0 +1,90 @@
+% Idioma y tipografía
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+% \setmainfont{Arial}
+
+\usepackage{etoolbox}
+\gappto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+
+\PassOptionsToPackage{autostyle}{csquotes}
+\usepackage{csquotes}
+
+% Márgenes para TODO el documento
+\usepackage{geometry}
+\geometry{top=2cm, bottom=2cm, left=3cm, right=2cm}
+
+% Colores
+\usepackage{xcolor}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+\definecolor{MORADITO}{HTML}{A30A54}
+\definecolor{azulescom}{RGB}{0,93,170}
+
+% Imágenes y figuras
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{font=small, textfont=it}
+\setlength{\abovecaptionskip}{1pt}
+\setlength{\fboxrule}{0.5pt}
+\setlength{\fboxsep}{0pt}
+
+% Tablas
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{amssymb}
+% agregué
+\usepackage{enumitem}
+\setlist[itemize]{nosep, leftmargin=*}
+% Algoritmos y pseudocódigo
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Código fuente
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily, frame=single}
+
+% Matemáticas
+\usepackage{amsmath}
+
+% Otros
+\usepackage{titlepic}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{comment}
+
+% TikZ para diagramas
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes.geometric, fit, backgrounds, arrows.meta}
+
+% Bibliografía
+\usepackage[
+    backend=biber,
+    style=numeric-comp,
+    sorting=none,
+    sortcites=true
+]{biblatex}
+
+\setlength{\bibhang}{2em}
+\setlength{\bibitemsep}{1.5em}
+
+\addbibresource{bibliografia.bib}
+
+% Configuración de hipervínculos
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=cyan,
+    citecolor=blue
+}
+
+% Formato de secciones
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
